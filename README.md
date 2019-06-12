@@ -38,9 +38,7 @@ python3 -m venv AStraPythonEnv
 source AStraPythonEnv/bin/activate
 ```
 
-Install dependencies:
-
-Please make sure you have install all the libraries/headers. In Ubuntu 18.04 LTS you can do:
+Install dependencies: please make sure you have install all the libraries/headers. In Ubuntu 18.04 LTS you can do:
 
 ```bash
 sudo apt install python3-tk
