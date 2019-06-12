@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 This is a module class for AStra.
 The base class "AStra" estimates the aneuploidy spectrum of the input cell line from sequencing data.
