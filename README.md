@@ -1,10 +1,13 @@
-** AStra **: Aneuploidy Spectrum Analysis as a Primer for Copy Number Studies of Cancer Cells. For more information please visit [AStra Manuscript](https://www.biorxiv.org/content/10.1101/639294v1?rss=1).
+# AStra: Aneuploidy Spectrum Analysis as a Primer for Copy Number Studies of Cancer Cells. 
 
 **Motivation:** Hyperploidy and segmental aneuploidy are hallmarks of cancer cells due to chromosome segregation errors and genomic instability. In such a situation, accurate aneuploidy profiling of cancer data is critical for calibration of copy-number detection tools. Additionally, cancer data may represent cell population which suffers from different levels of clonal heterogeneity. The degree of heterogeneity adversely affects the segregation of the genome into integral copy number states. This, in turn, strongly influences the reliability of this data for aneuploidy profiling and copy number analysis.
 
 **Results:** We have developed `AStra` framework for aneuploidy profiling of cancer NGS (next-generation sequencing) data and assessing their suitability for copy number analysis without any prior knowledge of the input cell line. AStra estimates the best-fit aneuploidy profile as the spectrum with most genomic segments around integral copy number (CN) states. After defining the best-fit spectrum, we compute the homogeneity score (HS) that measures the localization degree of genomic regions around CN states.
 
 **Availability and implementation:** `AStra` is an open source software implemented in Python and is available at https://github.com/AISKhalil/AStra.
+
+**For more information please visit [AStra Manuscript](https://www.biorxiv.org/content/10.1101/639294v1?rss=1).**
+
 
 ## Requirements
 
