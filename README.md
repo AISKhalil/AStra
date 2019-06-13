@@ -64,7 +64,7 @@ pip3 install xlsxwriter
 
 ## AStra execution 
 
-AStra is developed as a Python-class. Therefore, we added two scripts as simpler interfaces for AStra: **AStraSingleInput** and **AStraMultipleInputs**. In order to use `AStra`, you need firt to activate the python virtual environment that you created before:
+`AStra` is developed as a Python-class. Therefore, we added two scripts as simpler interfaces for AStra: **AStraSingleInput** and **AStraMultipleInputs**. In order to use `AStra`, you need first to activate the python virtual environment that you created before:
 
 ```bash
 cd AStra
@@ -77,7 +77,7 @@ source AStraPythonEnv/bin/activate
 ./AStraSingleInput.py -b input.bam -f hg19.ucsc.fa -o AStraResults
 ```
 
-There are three required parameters: the input BAM file (`-b` or `--bam`), the reference genome (`-f` or `--fa`), and the output folder (`-o` or `--out`) that will be used to generate the output files
+There are three required parameters: the input BAM file (`-b` or `--bam`), the reference genome (`-f` or `--fa`), and the output folder (`-o` or `--out`) that will be used to generate the output files.
 
 ```bash
 ######
@@ -95,5 +95,6 @@ arguments:
 ./AStraMultipleInputs.py
 ```
 
-You can modify this script to add the path of many BAM files. This script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: nearest ploidy, 2: number of reads, 3-12: CE for model1-model10, 13: HS, 14: CN State 0 percentage, 15: Median error, 16: Median correction factor, 17-26: Ploidy-spectrum (percentages of genome-segments per CN-state), and 27-36: number of segments per each CN-state. This eases the analysis of large number of BAM files.
+You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: nearest ploidy, 2: number of reads, 3-12: CE for model1-model10, 13: HS, 14: CN State 0 percentage, 15: Median error, 16: Median correction factor, 17-26: Ploidy-spectrum (percentages of genome-segments per CN-state), and 27-36: number of segments per each CN-state. This eases the analysis of large number of BAM files.
 
+## AStra outputs 
