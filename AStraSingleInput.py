@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #Aneuploidy Spectrum Analysis as a Primer for Copy Number Studies of Cancer Cells
-__Name__		= "AStra"
+__Name__	= "AStra"
 __Author__      = "Ahmed Khalil"
 __Email__       = "ahmed.khalil.bioinformatics@gmail.com"
 __URL__			= "https://github.com/AISKhalil/AStra"
