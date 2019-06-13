@@ -115,6 +115,4 @@ of the input cell line.
 >    the black line denotes the ploidy CN state (major peak) where the red line denotes the global median. The dotted black lines 
 >    denote the other CN states.
 
-&nbsp;&nbsp;&nbsp;&nbsp;**d. Anueploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
-     the black line denotes the ploidy CN state (major peak) where the red line denotes the global median. The dotted black lines 
-     denote the other CN states.
+&nbsp;&nbsp;&nbsp;&nbsp;**d. Anueploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution, the black line denotes the ploidy CN state (major peak) where the red line denotes the global median. The dotted black lines denote the other CN states.
