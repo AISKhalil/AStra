@@ -46,6 +46,7 @@ Install dependencies: please make sure you have install all the libraries/header
 ```bash
 sudo apt install python3-tk
 sudo apt install zlib1g zlib1g-dev zlib1g-dbg
+pip3 install wheel
 pip3 install numpy
 pip3 install scipy
 pip3 install pandas
