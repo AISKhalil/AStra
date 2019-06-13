@@ -86,7 +86,7 @@ usage: AStraSingleInput.py -b input.bam -f hg19.ucsc.fa -o AStraResults
 arguments:
   -b, --bam             the input BAM file (sorted and indexed). You can use samtools to sort and index the input bam file. 
   -f, --fa              the fasta file of the reference genome. For human hg19, you can download from http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz.
-  -o, --out		        the folder path to keep the results of `AStra`.
+  -o, --out             the folder path to keep the results of `AStra`.
 ```
 
 ### 2) Running AStra on multiple bam files:
