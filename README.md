@@ -65,8 +65,7 @@ pip3 install numexpr
 AStra is developed as a Python-class. Therefore, we added two scripts as simpler interfaces for AStra: **AStraSingleInput** and **AStraMultipleInputs**. In order to use `AStra`, you need firt to activate the python virtual environment that you created before:
 
 ```bash
-cd ~
-cd ploidyNGS
+cd AStra
 source AStraPythonEnv/bin/activate
 ```
 
