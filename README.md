@@ -111,11 +111,11 @@ of the input cell line.
 >    **b. Aneuploidy profile:** a narrowPeak BED format file of the approximated segmental anueploidy of the complete genome
 >    for UCSC Genome Browser.
 
->    **c. Coverage plot of the genome:** a figure of the RD signal of the genome after setting the CN reference.
-
-![VCaP Coverage plot](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_GenomeRD.png)
+>    **c. Coverage plot of the genome:** a figure of the RD signal of the genome after setting the CN reference. For example, 
+![VCaP coverage plot](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_GenomeRD.png)
  
 >    **d. Anueploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
 >    the black line denotes the ploidy CN state (major peak) where the red line denotes the global median. The dotted black lines 
->    denote the other CN states.
-
+>    denote the other CN states. For example,
+![VCap anueploidy spectrum](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_200bin_GenomeHistogramD.png)
+ 
