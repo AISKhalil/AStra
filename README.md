@@ -86,7 +86,7 @@ usage: AStraSingleInput.py -b input.bam -f hg19.ucsc.fa -o AStraResults
 arguments:
   -b, --bam             the input sorted BAM file. If not sorted, you can use samtools to sort it ("samtools sort input.bam > input.sorted.bam").
   -f, --fa              the fasta file of the reference genome. For human hg19, you can download from http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz.
-  -o, --out             the folder path to keep the results of `AStra`.
+  -o, --out             the folder path to keep the results of AStra.
 ```
 
 ### 2) Running AStra on multiple bam files:
@@ -95,6 +95,20 @@ arguments:
 ./AStraMultipleInputs.py
 ```
 
-You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: nearest ploidy, 2: number of reads, 3-12: CE for model1-model10, 13: HS, 14: CN State 0 percentage, 15: Median error, 16: Median correction factor, 17-26: Ploidy-spectrum (percentages of genome-segments per CN-state), and 27-36: number of segments per each CN-state. This eases the analysis of large number of BAM files.
+You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: nearest ploidy, 2: number of reads, 3-12: Centralization error (CE) for model1-model10, 13: HS, 14: CN State 0 percentage, 15: Median error, 16: Median correction factor, 17-26: Anueploidy spectrum (percentages of genome-segments per CN-state), and 27-36: number of segments per each CN-state. This eases the analysis of large number of BAM files.
 
 ## AStra outputs 
+
+`AStra` generates many output files providing the detailed characterization of the aneuploidy profile 
+of the input cell line. 
+    **a. Aneuploidy characterization:** a text file contains the important features of aneuploidy profiel of the input BAM
+    such as nearest ploidy, copy number reference, CE for each model, anueploidy spectrum, HS, CN State 0 percentage, Median 
+    error, and Median correction factor.
+   
+    **a. Aneuploidy characterization:** a text file contains the important features of aneuploidy profiel of the input BAM
+    such as nearest ploidy, copy number reference, CE for each model, anueploidy spectrum, HS, CN State 0 percentage, Median 
+    error, and Median correction factor.
+
+
+of the  a narrowPeak BED format file of the focal 
+amplifications /deletions of the complete genome for UCSC Genome Browser: 
