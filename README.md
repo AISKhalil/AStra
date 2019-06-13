@@ -106,9 +106,11 @@ of the input cell line.
 >    such as nearest ploidy, copy number reference, CE for each model, anueploidy spectrum, HS, CN State 0 percentage, Median 
 >    error, and Median correction factor.
    
->>    **a. Aneuploidy characterization:** a text file contains the important features of aneuploidy profiel of the input BAM
->>    such as nearest ploidy, copy number reference, CE for each model, anueploidy spectrum, HS, CN State 0 percentage, Median 
->>    error, and Median correction factor.
+>    **b. Aneuploidy profile:** a narrowPeak BED format file of the approximated segmental anueploidy of the complete genome
+>    for UCSC Genome Browser.
 
-of the  a narrowPeak BED format file of the focal 
-amplifications /deletions of the complete genome for UCSC Genome Browser: 
+>    **c. Coverage plot of the genome:** a figure of the RD signal of the genome after setting the CN reference.
+ 
+>    **d. Anueploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
+>    the black line denotes the ploidy CN state (major peak) where the red line denotes the global median. The dotted black lines 
+>    denote the other CN states.
