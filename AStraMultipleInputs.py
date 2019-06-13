@@ -22,7 +22,7 @@ from AStra import AStra
 # Inputs
 genomeFastaFile = 'hg19.ucsc.fa'
 outputDirectory = 'AStraResults'
-BamList = ['A.bam','B.bam','C.bam','D.bam']
+BamList = ['file1.bam','file2.bam','file3.bam','file4.bam']
 
 ## Aneuploidy-Spectrum with fields:
 # 1 nearest ploidy
