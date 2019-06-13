@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 #Aneuploidy Spectrum Analysis as a Primer for Copy Number Studies of Cancer Cells
-__Name__	= "AStra"
+__Name__		= "AStra"
 __Author__      = "Ahmed Khalil"
 __Email__       = "ahmed.khalil.bioinformatics@gmail.com"
-__URL__		= "https://github.com/AISKhalil/AStra"
+__URL__			= "https://github.com/AISKhalil/AStra"
 __Software__    = "Python 3"
 
 """AStra (Aneuploid Spectrum (detection) through read depth analysis) is 
@@ -13,6 +13,8 @@ __Software__    = "Python 3"
 """
 
 import sys
+import os
+import argparse
 import pysam    
 import numpy as np
 import xlsxwriter 
@@ -39,9 +41,9 @@ outputDirectory=args.outputDirectory
 # Check if bam index is present; if not, create it
 bamindexname = args.bam + ".bai"
 if os.path.isfile(bamindexname):
-	print("BAM index present... OK!")
+	print("BAM index present...")
 else:
-	print("No index available is available, indexing it...")
+	print("No BAM index is available, indexing it...")
 	pysam.index(args.bam)
 
 	

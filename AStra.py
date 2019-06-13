@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 
+#Aneuploidy Spectrum Analysis as a Primer for Copy Number Studies of Cancer Cells
+__Name__		= "AStra"
+__Author__      = "Ahmed Khalil"
+__Email__       = "ahmed.khalil.bioinformatics@gmail.com"
+__URL__			= "https://github.com/AISKhalil/AStra"
+__Software__    = "Python 3"
+
 """
-This is a module class for AStra.
-The base class "AStra" estimates the aneuploidy spectrum of the input cell line from sequencing data.
+AStra (Aneuploid Spectrum (detection) through read depth analysis) is 
+a Python-based software for capturing the aneuploidy spectrum of cancer genomes 
+without explicit assumption of the ploidy level of the input sequencing data.
 
-----------
-Input data
-----------
-BAM/SAM formatted-file.
-
-
------------------
-API documentation
------------------
-
+Input data: BAM/SAM formatted-file.
 
 
 """

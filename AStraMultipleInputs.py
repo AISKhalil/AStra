@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 #Aneuploidy Spectrum Analysis as a Primer for Copy Number Studies of Cancer Cells
-__Name__	= "AStra"
+__Name__		= "AStra"
 __Author__      = "Ahmed Khalil"
 __Email__       = "ahmed.khalil.bioinformatics@gmail.com"
-__URL__		= "https://github.com/AISKhalil/AStra"
+__URL__			= "https://github.com/AISKhalil/AStra"
 __Software__    = "Python 3"
 
 """AStra (Aneuploid Spectrum (detection) through read depth analysis) is 
@@ -21,7 +21,7 @@ from AStra import AStra
 
 # Inputs
 genomeFastaFile = 'hg19.ucsc.fa'
-outputDirectory = 'AStraResults'
+outputDirectory = './AStraResults'
 BamList = ['file1.bam','file2.bam','file3.bam','file4.bam']
 
 ## Aneuploidy-Spectrum with fields:
@@ -40,9 +40,16 @@ worksheet = workbook.add_worksheet()
 i = 1
 for bam in BamList:
 	print(bam)
+	bamindexname = bam + ".bai"
+	#
+	if os.path.isfile(bamindexname):
+		print("BAM index present...")
+	else:
+		print("No BAM index is available, indexing it...")
+		pysam.index(args.bam)
+	#
 	x = AStra(bam,  genomeFastaFile, outputDirectory)
 	x.ploidyEstimatorPipeline()	
-	#
 	x.saveGenome()
 	x.saveHistogram(200)
 	#
