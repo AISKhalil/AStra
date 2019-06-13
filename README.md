@@ -117,5 +117,5 @@ of the input cell line.
 >    **d. Anueploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
 >    the black line denotes the ploidy CN state (major peak) where the red line denotes the global median. The dotted black lines 
 >    denote the other CN states. For example,
-![VCap anueploidy spectrum](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_200bin_GenomeHistogramD.png)
+![VCap anueploidy spectrum](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_200bin_GenomeHistogram.png)
  
