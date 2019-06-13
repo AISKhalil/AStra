@@ -106,7 +106,9 @@ of the input cell line.
 >    such as nearest ploidy, copy number reference, CE for each model, anueploidy spectrum, HS, CN State 0 percentage, Median 
 >    error, and Median correction factor.
    
-
+>>    **a. Aneuploidy characterization:** a text file contains the important features of aneuploidy profiel of the input BAM
+>>    such as nearest ploidy, copy number reference, CE for each model, anueploidy spectrum, HS, CN State 0 percentage, Median 
+>>    error, and Median correction factor.
 
 of the  a narrowPeak BED format file of the focal 
 amplifications /deletions of the complete genome for UCSC Genome Browser: 
