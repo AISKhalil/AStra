@@ -95,5 +95,5 @@ arguments:
 ./AStraMultipleInputs.py
 ```
 
-You can modify this script to add the path of many bam files. This script outputs an excel file contains the complete profile of all bam files (each bam file in a row). Each row contains fields of 1: nearest ploidy, 2: number of reads, 3-12: CE for model1-model10, 13: HS, 14: CN State 0 percentage, 15: Median error, 16: Median correction factor, 17-26: Ploidy-spectrum (percentages of genome-segments per CN-state), and 27-36: number of segments per each CN-state. This ease the analysis of large number of bam files.
+You can modify this script to add the path of many BAM files. This script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: nearest ploidy, 2: number of reads, 3-12: CE for model1-model10, 13: HS, 14: CN State 0 percentage, 15: Median error, 16: Median correction factor, 17-26: Ploidy-spectrum (percentages of genome-segments per CN-state), and 27-36: number of segments per each CN-state. This eases the analysis of large number of BAM files.
 
