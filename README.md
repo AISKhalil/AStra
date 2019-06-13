@@ -59,6 +59,7 @@ pip3 install hmmlearn
 pip3 install pysam
 pip3 install pysamstats
 pip3 install numexpr
+pip3 install xlsxwriter
 ```
 
 ## AStra execution 
