@@ -62,6 +62,7 @@ pip3 install numexpr
 pip3 install xlsxwriter
 ```
 
+
 ## AStra execution 
 
 `AStra` is developed as a Python-class. Therefore, we added two scripts as simpler interfaces for AStra: **AStraSingleInput** and **AStraMultipleInputs**. In order to use `AStra`, you need first to activate the python virtual environment that you created before:
@@ -96,6 +97,7 @@ arguments:
 ```
 
 You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: nearest ploidy, 2: number of reads, 3-12: Centralization error (CE) for model1-model10, 13: HS, 14: CN State 0 percentage, 15: Median error, 16: Median correction factor, 17-26: Anueploidy spectrum (percentages of genome-segments per CN-state), and 27-36: number of segments per each CN-state. This eases the analysis of large number of BAM files.
+
 
 ## AStra outputs 
 
