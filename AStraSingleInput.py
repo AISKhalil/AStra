@@ -4,8 +4,8 @@
 __Name__	= "AStra"
 __Author__      = "Ahmed Khalil"
 __Email__       = "ahmed.khalil.bioinformatics@gmail.com"
-__URL__			= "https://github.com/AISKhalil/AStra"
-__Software__     = "Python 3"
+__URL__		= "https://github.com/AISKhalil/AStra"
+__Software__    = "Python 3"
 
 """AStra (Aneuploid Spectrum (detection) through read depth analysis) is 
 	a Python-based software for capturing the aneuploidy spectrum of cancer genomes 
