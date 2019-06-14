@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 #Aneuploidy Spectrum Analysis as a Primer for Copy Number Studies of Cancer Cells
-__Name__	= "AStra"
+__Name__		= "AStra"
 __Author__      = "Ahmed Khalil"
 __Email__       = "ahmed.khalil.bioinformatics@gmail.com"
-__URL__		= "https://github.com/AISKhalil/AStra"
+__URL__			= "https://github.com/AISKhalil/AStra"
 __Software__    = "Python 3"
 
 """
@@ -824,6 +824,12 @@ class AStra(object):
 		#
 		plt.figure()
 		plt.plot(signal,'r', linestyle = 'None',marker = '.', markersize = 1)
+		plt.plot([0,len(signal)],[1, 1],'k--')				
+		plt.plot([0,len(signal)],[2, 2],'k--')
+		plt.plot([0,len(signal)],[3, 3],'k--')				
+		plt.plot([0,len(signal)],[4, 4],'k--')
+		plt.plot([0,len(signal)],[5, 5],'k--')
+
 		plt.title('Genome')
 		plt.xlabel('Bin number')
 		plt.ylabel('Copy number')
@@ -851,6 +857,12 @@ class AStra(object):
 		#
 		plt.figure()
 		plt.plot(signal,'r', linestyle = 'None',marker = '.', markersize = 1)
+		plt.plot([0,len(signal)],[1, 1],'k--')				
+		plt.plot([0,len(signal)],[2, 2],'k--')
+		plt.plot([0,len(signal)],[3, 3],'k--')				
+		plt.plot([0,len(signal)],[4, 4],'k--')
+		plt.plot([0,len(signal)],[5, 5],'k--')
+
 		plt.title('Genome')
 		plt.xlabel('Bin number')
 		plt.ylabel('Copy number')
