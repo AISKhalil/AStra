@@ -75,7 +75,7 @@ source AStraPythonEnv/bin/activate
 ### 1) Running AStra on single input:
 
 ```bash
-./AStraSingleInput.py -b input.bam -f hg19.ucsc.fa -o AStraResults
+python ./AStraSingleInput.py -b input.bam -f hg19.ucsc.fa -o AStraResults
 ```
 
 There are three required parameters: the input BAM file (`-b` or `--bam`), the reference genome (`-f` or `--fa`), and the output folder (`-o` or `--out`) that will be used to generate the output files.
@@ -93,7 +93,7 @@ arguments:
 ### 2) Running AStra on multiple bam files:
 
 ```bash
-./AStraMultipleInputs.py
+python ./AStraMultipleInputs.py
 ```
 
 You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: nearest ploidy, 2: number of reads, 3-12: Centralization error (CE) for model1-model10, 13: HS, 14: CN State 0 percentage, 15: Median error, 16: Median correction factor, 17-26: Anueploidy spectrum (percentages of genome-segments per CN-state), and 27-36: number of segments per each CN-state. This eases the analysis of large number of BAM files.
