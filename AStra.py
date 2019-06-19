@@ -613,7 +613,7 @@ class AStra(object):
 		ploidyMedianError = 100*abs(peakValue - self.readDepthMedian)/peakValue
 		####
 		fileID2.write('Median error:' + str(ploidyMedianError) +' %' +'\n')
-		fileID2.write('Median-Peak ratio:' + str(self.readDepthMedian/peakValue) +' %' +'\n')
+		fileID2.write('CN correction factor:' + str(self.readDepthMedian/peakValue) +' %' +'\n')
 		fileID2.write('\n')
 		fileID2.write('\n')
 
