@@ -1,4 +1,4 @@
-# AStra: Aneuploidy Spectrum Analysis as a Primer for Copy Number Studies of Cancer Cells. 
+# AStra: Aneuploidy Spectrum Analysis as a Primer for Copy Number Profiling of Cancer Cells 
 
 **Motivation:** Hyperploidy and segmental aneuploidy are hallmarks of cancer cells due to chromosome segregation errors and genomic instability. In such a situation, accurate aneuploidy profiling of cancer data is critical for calibration of copy-number detection tools. Additionally, cancer data may represent cell population which suffers from different levels of clonal heterogeneity. The degree of heterogeneity adversely affects the segregation of the genome into integral copy number states. This, in turn, strongly influences the reliability of this data for aneuploidy profiling and copy number analysis.
 
