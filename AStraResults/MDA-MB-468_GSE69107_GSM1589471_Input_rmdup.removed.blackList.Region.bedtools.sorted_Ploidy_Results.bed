@@ -1,0 +1,33 @@
+Ploidy-Level = tetraploid
+Copy number reference = 312.046625
+
+CE (model1)    = 6041.395434685806
+CE (model2)    = 6494.808691759311
+CE (model3)    = 5997.952989797599
+CE (model4)    = 6137.1806331706
+CE (model5)    = 6682.213626715225
+CE (model6)    = 6273.865284002776
+CE (model7)    = 6050.785100119242
+CE (model8)    = 6331.100038270694
+CE (model9)    = 6682.213626715225
+CE (model10)    = 6635.17150779337
+
+
+CN = 0 : 8.486963392151699 % in 45 segments
+CN = 1 : 1.5406900184356072 % in 16 segments
+CN = 2 : 13.974848564656307 % in 95 segments
+CN = 3 : 15.97642875954701 % in 129 segments
+CN = 4 : 16.25296286542007 % in 127 segments
+CN = 5 : 9.968396102185936 % in 83 segments
+CN = 6 : 9.955227811430076 % in 95 segments
+CN = 7 : 7.403871477482223 % in 70 segments
+CN = 8 : 3.8319726099552276 % in 37 segments
+CN = 9 : 3.5192257045035555 % in 32 segments
+
+
+Homogenous score : 55.557018698972875 %
+Dispersion score: 1.569283325030247 %
+Median error:8.477378981426252 %
+CN correction factor:1.0847737898142624 %
+
+

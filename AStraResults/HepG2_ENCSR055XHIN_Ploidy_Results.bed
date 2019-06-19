@@ -1,0 +1,33 @@
+Ploidy-Level = diploid
+Copy number reference = 1906.7645749999997
+
+CE (model1)    = 1872.9381944141087
+CE (model2)    = 3785.004474619289
+CE (model3)    = 3615.496038129938
+CE (model4)    = 1860.8710302345526
+CE (model5)    = 3910.349175580508
+CE (model6)    = 1850.5612636394821
+CE (model7)    = 1850.5612636394821
+CE (model8)    = 3800.830348056274
+CE (model9)    = 3642.2680839575382
+CE (model10)    = 1850.5612636394821
+
+
+CN = 0 : 9.003818804319199 % in 62 segments
+CN = 1 : 5.6557808796418225 % in 25 segments
+CN = 2 : 67.22412430866474 % in 80 segments
+CN = 3 : 14.80445088227548 % in 34 segments
+CN = 4 : 2.5711087700816435 % in 14 segments
+CN = 5 : 0.1646036344482486 % in 3 segments
+CN = 6 : 0.5761127205688702 % in 1 segments
+CN = 7 : 0.0 % in 0 segments
+CN = 8 : 0.0 % in 0 segments
+CN = 9 : 0.0 % in 0 segments
+
+
+Homogenous score : 96.57624440347642 %
+Dispersion score: 2.6884779516358464 %
+Median error:1.0087991591725638 %
+CN correction factor:1.0100879915917256 %
+
+

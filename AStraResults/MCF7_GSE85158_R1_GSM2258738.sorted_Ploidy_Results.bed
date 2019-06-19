@@ -1,0 +1,33 @@
+Ploidy-Level = triploid
+Copy number reference = 496.655525
+
+CE (model1)    = 5920.084004492004
+CE (model2)    = 3506.188634233824
+CE (model3)    = 3053.0018316014903
+CE (model4)    = 6205.628642444684
+CE (model5)    = 3216.7455070856577
+CE (model6)    = 3308.0261493053445
+CE (model7)    = 5949.848326028084
+CE (model8)    = 3308.0261493053445
+CE (model9)    = 3083.281796704962
+CE (model10)    = 3136.4768578878256
+
+
+CN = 0 : 6.0179088754279695 % in 25 segments
+CN = 1 : 0.717671846194364 % in 3 segments
+CN = 2 : 9.556887016065314 % in 30 segments
+CN = 3 : 32.80221227284699 % in 58 segments
+CN = 4 : 26.32999736634185 % in 41 segments
+CN = 5 : 19.03476428759547 % in 46 segments
+CN = 6 : 2.636950223860943 % in 23 segments
+CN = 7 : 1.1193047142480905 % in 12 segments
+CN = 8 : 0.48064261258888596 % in 7 segments
+CN = 9 : 0.48064261258888596 % in 6 segments
+
+
+Homogenous score : 92.08256518303924 %
+Dispersion score: 0.0212306712430558 %
+Median error:25.774633568541635 %
+CN correction factor:1.2577463356854164 %
+
+
