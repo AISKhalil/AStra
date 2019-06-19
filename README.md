@@ -104,8 +104,8 @@ You can modify this script to add the path of many BAM files. Besides to the def
 `AStra` generates many output files providing the detailed characterization of the aneuploidy profile 
 of the input cell line. Results of the analyzed cell lines were uploaded in **AStraResults** folder.
 
->    **a. Aneuploidy characterization:** a text file contains the important features of aneuploidy profiel of the input BAM
->    such as nearest ploidy, copy number reference, CE for each model, anueploidy spectrum, HS, CN State 0 percentage, Median 
+>    **a. Aneuploidy characterization:** a text file containing the important features of aneuploidy profile of the input BAM
+>    such as nearest ploidy, copy number reference, CE for each model, anueploidy spectrum, homogeneity score, CN State 0 percentage, Median 
 >    error, and Median correction factor.
    
 >    **b. Aneuploidy profile:** a narrowPeak BED format file of the approximated segmental anueploidy of the complete genome
