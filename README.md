@@ -6,7 +6,7 @@
 
 **Availability and implementation:** `AStra` is an open source software implemented in Python and is available at https://github.com/AISKhalil/AStra.
 
-**For more information please visit [AStra Manuscript](https://www.biorxiv.org/content/10.1101/639294v1?rss=1).**
+**For more information please visit [AStra Manuscript](https://www.biorxiv.org/content/10.1101/674929v1).**
 
 
 ## Requirements
