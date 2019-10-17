@@ -2,28 +2,33 @@
 
 **Motivation:** Hyperploidy and segmental aneuploidy are hallmarks of cancer cells due to chromosome segregation errors and genomic instability. In such a situation, accurate aneuploidy profiling of cancer data is critical for calibration of copy-number detection tools. Additionally, cancer data may represent cell population which suffers from different levels of clonal heterogeneity. The degree of heterogeneity adversely affects the segregation of the genome into integral copy number states. This, in turn, strongly influences the reliability of this data for aneuploidy profiling and copy number analysis.
 
-**Results:** We have developed `AStra` framework for aneuploidy profiling of cancer NGS (next-generation sequencing) data and assessing their suitability for copy number analysis without any prior knowledge of the input cell line. AStra estimates the best-fit aneuploidy profile as the spectrum with most genomic segments around integral copy number (CN) states. After defining the best-fit spectrum, we compute the homogeneity score (HS) that measures the localization degree of genomic regions around CN states.
+**AStra** is a Python-based framework for aneuploidy profiling of cancer NGS (next-generation sequencing) data and assessing their suitability for copy number analysis without any prior knowledge of the input cell line. **AStra** estimates the best-fit aneuploidy profile as the spectrum with most genomic segments around integral copy number (CN) states. After defining the best-fit spectrum, **AStra** compute the centralization score (CS) that measures the localization degree of genomic regions around CN states.
 
-**Availability and implementation:** `AStra` is an open source software implemented in Python and is available at https://github.com/AISKhalil/AStra.
+**For a full description of the method and applications, please visit [AStra Manuscript](https://www.biorxiv.org/content/10.1101/674929v1).**
 
-**For more information please visit [AStra Manuscript](https://www.biorxiv.org/content/10.1101/674929v1).**
+## Contents
+- [Requirements](#requirement)
+- [Download](#Download)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Output](#output)
 
-
-## Requirements
+### <a name="requirement"></a>Requirements
 
 - python >=3.6.5
 - pysam  >=0.12
 
-## Installation
 
-### Download AStra from github
+### <a name="Download"></a>Download
 
 ```bash
 cd ~
 git clone https://github.com/AISKhalil/AStra.git
 ```
 
-### Python virtual environment and python dependencies
+### <a name="installation"></a>Installation
+
+#### Python virtual environment and python dependencies
 
 Make sure pip3 is installed. If not, then please check your distribution's documentation and install it. In Ubuntu 18.04 LTS you can do:
 
@@ -63,7 +68,7 @@ pip3 install xlsxwriter
 ```
 
 
-## AStra execution 
+### <a name="usage"></a>Usage
 
 `AStra` is developed as a Python-class. Therefore, we added two scripts as simpler interfaces for AStra: **AStraSingleInput** and **AStraMultipleInputs**. In order to use `AStra`, you need first to activate the python virtual environment that you created before:
 
@@ -72,7 +77,7 @@ cd AStra
 source AStraPythonEnv/bin/activate
 ```
 
-### 1) Running AStra on single input:
+#### 1) Running AStra on single input:
 
 ```bash
 python ./AStraSingleInput.py -b input.bam -f hg19.ucsc.fa -o AStraResults
@@ -90,7 +95,7 @@ arguments:
   -o, --out             the folder path to keep the results of AStra.
 ```
 
-### 2) Running AStra on multiple bam files:
+#### 2) Running AStra on multiple bam files:
 
 ```bash
 python ./AStraMultipleInputs.py
@@ -99,10 +104,10 @@ python ./AStraMultipleInputs.py
 You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: nearest ploidy, 2: number of reads, 3-12: Centralization error (CE) for model1-model10, 13: HS, 14: CN State 0 percentage, 15: Median error, 16: Median correction factor, 17-26: Anueploidy spectrum (percentages of genome-segments per CN-state), and 27-36: number of segments per each CN-state. This eases the analysis of large number of BAM files.
 
 
-## AStra outputs 
+### <a name="output"></a>Output
 
-`AStra` generates many output files providing the detailed characterization of the aneuploidy profile 
-of the input cell line. Results of the analyzed cell lines were uploaded in **AStraResults** folder.
+**AStra** generates many output files providing the detailed characterization of the aneuploidy profile 
+of the input cell line. Results of the analyzed cell lines were uploaded in `AStraResults/` folder.
 
 >    **a. Aneuploidy characterization:** a text file containing the important features of aneuploidy profile of the input BAM
 >    such as nearest ploidy, copy number reference, CE for each model, anueploidy spectrum, homogeneity score, CN State 0 percentage, Median 
