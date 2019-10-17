@@ -77,7 +77,7 @@ cd AStra
 source AStraPythonEnv/bin/activate
 ```
 
-- 1) Running AStra on single input:
+#### 1) Running AStra on single input:
 
 ```bash
 python ./AStraSingleInput.py -b input.bam -f hg19.ucsc.fa -o AStraResults
@@ -95,7 +95,7 @@ arguments:
   -o, --out             the folder path to keep the results of AStra.
 ```
 
-- 2) Running AStra on multiple bam files:
+#### 2) Running AStra on multiple bam files:
 
 ```bash
 python ./AStraMultipleInputs.py
