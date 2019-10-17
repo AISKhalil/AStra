@@ -28,9 +28,9 @@ git clone https://github.com/AISKhalil/AStra.git
 
 ### <a name="installation"></a>Installation
 
-#### Python virtual environment and python dependencies
+Use can create "Python virtual environment" and install the required libraries using the following commands.
 
-Make sure pip3 is installed. If not, then please check your distribution's documentation and install it. In Ubuntu 18.04 LTS you can do:
+- Make sure pip3 is installed. If not, then please check your distribution's documentation and install it. In Ubuntu 18.04 LTS you can do:
 
 ```bash
 sudo apt update
@@ -38,7 +38,7 @@ sudo apt install python3-pip
 pip3 install --upgrade pip
 ```
 
-Go to the AStra folder, create and activate a new virtual environment
+- Go to the AStra folder, create and activate a new virtual environment
 
 ```bash
 cd AStra
@@ -46,7 +46,7 @@ python3 -m venv AStraPythonEnv
 source AStraPythonEnv/bin/activate
 ```
 
-Install dependencies: please make sure you have install all the libraries/headers. In Ubuntu 18.04 LTS you can do:
+- Install dependencies: please make sure you have install all the libraries/headers. In Ubuntu 18.04 LTS you can do:
 
 ```bash
 sudo apt install python3-tk
