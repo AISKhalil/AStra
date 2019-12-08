@@ -101,7 +101,7 @@ arguments:
 python ./AStraMultipleInputs.py
 ```
 
-You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: nearest ploidy, 2: number of reads, 3-12: Centralization error (CE) for model1-model10, 13: HS, 14: CN State 0 percentage, 15: Median error, 16: Median correction factor, 17-26: Anueploidy spectrum (percentages of genome-segments per CN-state), and 27-36: number of segments per each CN-state. This eases the analysis of large number of BAM files.
+You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: whole-genome ploidy number, 2: copy number reference (CNR), 3: centralization error (CE), 4: centralization score, 5: read depeth(RD)-median, 6: RD-median/CNR 7: total counts of NGS reads, 8-18: anueploidy spectrum (percentages of genome-segments per CN-state), 19: whole-genome ploidy state, 20: AStra model, and 21-26: CEs for all models (m1-m6). This eases the analysis of large number of BAM files.
 
 
 ### <a name="output"></a>Output
