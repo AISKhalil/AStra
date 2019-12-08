@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 #Aneuploidy Spectrum Analysis as a Primer for Copy Number Studies of Cancer Cells
-__Name__	= "AStra"
+__Name__		= "AStra"
 __Author__      = "Ahmed Khalil"
 __Email__       = "ahmed.khalil.bioinformatics@gmail.com"
-__URL__		= "https://github.com/AISKhalil/AStra"
+__URL__			= "https://github.com/AISKhalil/AStra"
 __Software__    = "Python 3"
 
 """
@@ -56,8 +56,9 @@ class AStra(object):
 	genomeFastaFile = ''	      #Genome sequence folder
 	outputFolder = '.'	          #Output folder
 	#
-	binSize = 100000              #bin-size
+	binSize = 200000              #bin-size
 	minMAPQ = 1                   #minimum MAPQ of a read to be kept for downstream analysis
+	aneuploidySpectrumMethod = 1  #the method used for computing the aneuploidy spectrum- 1:segment-wise, 2:RD-wise
 	#
 	readCounts = dict()           #RD-signal
 	gcPercent  = dict()           #GC-Percentage/bin [0-100%] used for filtering-out low-mappability, centromeres, and telomeres. 
@@ -67,17 +68,21 @@ class AStra(object):
 	genomeRD = np.array([])
 	readDepthMedian = {}		  #Median of the RD signal.
 	#
-	segmentsFrequency = 1000000   #the expected length of segments (in bps)
 	chrSegments = dict()          #Segments per chromosome: start, end, width (in bins), and CN.
 	#
 	centralizationErrors = {}	  #the centralization-errors.	
 	copyNumberReference = {}      #Reference copy-number.
+	minimumCE = {}				  #Centralization-error corresponding to the copy number reference
 	ploidyModel = {}			  #Model that achieve the minimum centralization error.
-	ploidySegments = dict()       #the Anueploidy profile.
+	ploidySegments = dict()       #The Anueploidy profile.
 	#
-	ploidyLevel = {}              #the Ploidy of the cell.
+	ploidyLevel = {}              #The ploidy of the cell.
+	ploidyNumber = {} 			  #The ploidy number of the cell.
 
+	
+	
 
+	
 	def __init__(self, inputFile, fastaFile, outputFolder):
 		"""
 		Initialization
@@ -89,8 +94,8 @@ class AStra(object):
 		if not os.path.exists(self.outputFolder):
 		    os.makedirs(self.outputFolder)
 
-	
-
+			
+			
 
 
 	def readsCounting(self):
@@ -129,6 +134,7 @@ class AStra(object):
 
 
 
+
 	def RDfiltering(self, chrom):
 		"""
 		filtering the RD signal to remove centromeres,telomeres, and low-mappability bins. We filter them based on their GC-percentages.
@@ -161,14 +167,10 @@ class AStra(object):
 		#
 		RDsignal = self.readCounts[chrom]
 
-		#Number of expected segments
-		avgSize = round(self.segmentsFrequency/self.binSize)
-
 		# Ruptures segmentations
 		model = "rbf" #Kernelized mean change
-		algo = rpt.Pelt(model=model, min_size= 5, jump=1).fit(RDsignal)
-		my_bkps = algo.predict(pen = 3)
-
+		algo = rpt.Pelt(model=model, min_size= 3, jump=1).fit(RDsignal)
+		my_bkps = algo.predict(pen = 5)
 
 		#Segments
 		bkps = np.array(my_bkps)
@@ -195,17 +197,12 @@ class AStra(object):
 
 
 
-
 	def computeMultimodalProbability(self, modelNumber, x):
 		"""
 		create the multimodal probability.
 		"""
 		sigma = 0.5/3 #standard deviation
 		a1 = 1
-		a2 = 0.5
-		a3 = 0.25
-		a4 = 0.125
-		a5 = 0.0625
 		#
 		if(modelNumber == 'model1'):
 			c = 1.0/(a1)			
@@ -226,20 +223,13 @@ class AStra(object):
 			c = 1.0/(a1 + a1 + a1)
 			RDDist = a1*stats.norm.pdf(x,2,sigma) + a1*stats.norm.pdf(x,3,sigma) + a1*stats.norm.pdf(x,4,sigma) 
 		elif(modelNumber == 'model7'):
-			c = 1.0/(a1 + a2 + a3 + a4 + a5)			
-			RDDist = a1*stats.norm.pdf(x,2,sigma) + a2*stats.norm.pdf(x,3,sigma) + a3*stats.norm.pdf(x,4,sigma) + a4*stats.norm.pdf(x,5,sigma) + a5*stats.norm.pdf(x,6,sigma)  
-		elif(modelNumber == 'model8'):
-			c = 1.0/(a2 + a1 + a2 + a3 + a4)
-			RDDist = a2*stats.norm.pdf(x,2,sigma) + a1*stats.norm.pdf(x,3,sigma) + a2*stats.norm.pdf(x,4,sigma) + a3*stats.norm.pdf(x,5,sigma) + a4*stats.norm.pdf(x,6,sigma) 
-		elif(modelNumber == 'model9'):
-			c = 1.0/(a3 + a2 + a1 + a2 + a3)
-			RDDist = a3*stats.norm.pdf(x,2,sigma) + a2*stats.norm.pdf(x,3,sigma) + a1*stats.norm.pdf(x,4,sigma) + a2*stats.norm.pdf(x,5,sigma) + a3*stats.norm.pdf(x,6,sigma) 
-		elif(modelNumber == 'model10'):
-			c = 1.0/(a1 + a1 + a1 + a1 + a1)
-			RDDist = a1*stats.norm.pdf(x,2,sigma) + a1*stats.norm.pdf(x,3,sigma) + a1*stats.norm.pdf(x,4,sigma)	+ a1*stats.norm.pdf(x,5,sigma) + a1*stats.norm.pdf(x,6,sigma)			
+			c = 1.0/(a1 + a1 + a1 + a1 + a1 + a1 + a1 + a1 + a1)
+			RDDist = a1*stats.norm.pdf(x,2,sigma) + a1*stats.norm.pdf(x,3,sigma) + a1*stats.norm.pdf(x,4,sigma) + a1*stats.norm.pdf(x,5,sigma) + a1*stats.norm.pdf(x,6,sigma) + a1*stats.norm.pdf(x,7,sigma) + a1*stats.norm.pdf(x,8,sigma) + a1*stats.norm.pdf(x,9,sigma) + a1*stats.norm.pdf(x,10,sigma) 
+		#
 		prob = c*RDDist
 		#
 		return prob
+
 
 
 
@@ -248,15 +238,11 @@ class AStra(object):
 		"""
 		estimate the copy number reference based on the assumed ploidy model
 		"""
-		cond1 = (genomeFData <= np.percentile(genomeFData,99))
-		cond2 = (genomeFData > np.percentile(genomeFData,1))
-		filteringMask  = np.bitwise_and(cond1, cond2)
-		genomeFData = genomeFData[filteringMask]
 		##
 		genomeFDataLen = len(genomeFData)
 		genomeFBData = np.array([]) 
 		#
-		n = round(self.segmentsFrequency/self.binSize)
+		n = 1
 		if(n==1):
 			genomeFBData = genomeFData
 		else:
@@ -290,6 +276,7 @@ class AStra(object):
 
 
 
+
 	def segmentsMerging(self, copyNumberReference):
 		"""
 		estimate the chromosomal aneuploidy of each chromosome
@@ -298,7 +285,6 @@ class AStra(object):
 		mergedChrSegments = dict()
 		for chrom in self.chrSegments.keys():
 
-			##########################################################
 			##########################################################
 			#-------------------- Segmentation ----------------------#
 			# Chromosome-length
@@ -324,6 +310,7 @@ class AStra(object):
 			chrSegmentsStart0 = chrSegmentsStart
 			chrSegmentsEnd0   = chrSegmentsEnd
 			chrSegmentsCN0    = chrSegmentsCN
+
 			# states of gneome segments
 			chrSegmentsStates = np.round(chrSegmentsCN0)
 
@@ -348,27 +335,67 @@ class AStra(object):
 			#######################################################
 			##------------------------ Output  ------------------##
 			chrSegmentsWidth1 = chrSegmentsEnd1 - chrSegmentsStart1 + 1
-			segmentsStart  = np.reshape(chrSegmentsStart1,(noSegments1,1))
-			segmentsEnd    = np.reshape(chrSegmentsEnd1,(noSegments1,1))
-			segmentsWidth  = np.reshape(chrSegmentsWidth1,(noSegments1,1))
-			segmentsRD     = np.reshape(chrSegmentsRD1,(noSegments1,1))
-			segmentsCN     = np.reshape(chrSegmentsCN1,(noSegments1,1))
+			segmentsStart     = np.reshape(chrSegmentsStart1,(noSegments1,1))
+			segmentsEnd       = np.reshape(chrSegmentsEnd1,(noSegments1,1))
+			segmentsWidth     = np.reshape(chrSegmentsWidth1,(noSegments1,1))
+			segmentsRD        = np.reshape(chrSegmentsRD1,(noSegments1,1))
+			segmentsCN        = np.reshape(chrSegmentsCN1,(noSegments1,1))
 
 			segmentsData   = np.concatenate((segmentsStart, segmentsEnd, segmentsWidth, segmentsRD, segmentsCN), axis=1)
 			mergedChrSegments[chrom] = segmentsData
-
-
 
 		return mergedChrSegments
 
 
 
 
+	def segmentsMerging2(self, copyNumberReference):
+		"""
+		estimate the chromosomal aneuploidy of each chromosome
+		"""
+		# RDs & widths of genome segments
+		mergedChrSegments = dict()
+		for chrom in self.chrSegments.keys():
+
+			##########################################################
+			#-------------------- Segmentation ----------------------#
+			# Chromosome-length
+			chrLength       = self.chrLengths[chrom]
+			binSize    	    = self.binSize
+			chrLengthInBins = math.ceil(chrLength/binSize)
+
+			# RD-signal
+			chrRDSignal = self.readCounts[chrom]
+			chrSegments = self.chrSegments[chrom]
+
+			chrSegmentsStart = chrSegments[:,0].astype(int)
+			chrSegmentsEnd   = chrSegments[:,1].astype(int)
+			chrSegmentsWidth = chrSegments[:,2]
+			chrSegmentsRD    = chrSegments[:,3]
+
+			# CNs of chromosome segments
+			chrSegmentsCN = chrSegmentsRD *2/copyNumberReference
+			noSegments = len(chrSegmentsCN)
+
+			#######################################################
+			##------------------------ Output  ------------------##
+			segmentsStart     = np.reshape(chrSegmentsStart,(noSegments,1))
+			segmentsEnd       = np.reshape(chrSegmentsEnd,(noSegments,1))
+			segmentsWidth     = np.reshape(chrSegmentsWidth,(noSegments,1))
+			segmentsRD        = np.reshape(chrSegmentsRD,(noSegments,1))
+			segmentsCN        = np.reshape(chrSegmentsCN,(noSegments,1))
+
+			segmentsData   = np.concatenate((segmentsStart, segmentsEnd, segmentsWidth, segmentsRD, segmentsCN), axis=1)
+			mergedChrSegments[chrom] = segmentsData
+
+		return mergedChrSegments
+
+
 
 
 	def computeCentralizationError(self, estimatedCNReference, chrSegments):
 		"""
-		compute the centralization error using the estimated copy number reference
+		compute the centralization error using the estimated copy number reference from the genomic segments.
 		"""
 		genomeSegmentsRD    = np.array([]) 
 		genomeSegmentsWidth = np.array([]) 
@@ -380,22 +407,19 @@ class AStra(object):
 				genomeSegmentsRD    = np.append(genomeSegmentsRD, chrSegmentsData[:,3])
 
 
-		#minSegmentWidth = round(self.segmentsFrequency/self.binSize)
-		minWidthMask    = (genomeSegmentsWidth > 0)
+		minWidthMask        = (genomeSegmentsWidth > 0)
 		genomeSegmentsWidth = genomeSegmentsWidth[minWidthMask]		
-		genomeSegmentsRD   = genomeSegmentsRD[minWidthMask]				
+		genomeSegmentsRD    = genomeSegmentsRD[minWidthMask]				
 
 		# CNs of genome segments
 		genomeSegmentsCN = genomeSegmentsRD *2/estimatedCNReference
-		print('CN = ' + str(estimatedCNReference))
 
 		# states of gneome segments
 		genomeSegmentsStates = np.round(genomeSegmentsCN)
 
 		##############################################################################
-		##############################################################################
 		CEDict = dict()
-		for i in range(0,10):
+		for i in range(0,20):
 			CNiMask = (genomeSegmentsStates == i)
 			genomeSegmentsCNi       = genomeSegmentsCN[CNiMask]
 			genomeSegmentsStatesCNi = genomeSegmentsStates[CNiMask]
@@ -407,9 +431,49 @@ class AStra(object):
 				centralizationErrorCNi = 0.0
 			#print(centralizationErrorCNi)
 			CEDict[i] = centralizationErrorCNi
-		####
-		CWDict = {0:1, 1:1, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1, 9:1}
 		#-------------- Centralization-Error --------------#		
+		CWDict = {0:1, 1:1, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1, 9:1, 10:1, 11:1, 12:1, 13:1, 14:1, 15:1, 16:1, 17:1, 18:1, 19:1, 20:1}
+		centralizationError = 0
+		for i in CEDict.keys():
+			centralizationError = centralizationError + CEDict[i]*CWDict[i]
+		#
+		return centralizationError
+
+
+
+
+	def computeCentralizationError2(self, estimatedCNReference):
+		"""
+		compute the centralization error using the estimated copy number reference from the RD signal.
+		"""
+		print('CN = ' + str(estimatedCNReference))
+		##
+		genomeRD  = np.array([]) 
+		for chrom in self.readCounts.keys():
+			genomeRD = np.append(genomeRD, self.readCounts[chrom])
+
+		# CNs of genome segments
+		genomeCN = genomeRD*2/estimatedCNReference
+
+		# states of gneome segments
+		genomeStates = np.round(genomeCN)
+
+		##############################################################################
+		##############################################################################
+		CEDict = dict()
+		for i in range(0,20):
+			CNiMask = (genomeStates == i)
+			genomeSegmentsCNi       = genomeCN[CNiMask]
+			genomeSegmentsStatesCNi = genomeStates[CNiMask]
+			if(len(genomeSegmentsCNi) > 0):
+				genomeSegmentsErrorCNi = np.abs(genomeSegmentsCNi - genomeSegmentsStatesCNi)
+				centralizationErrorCNi = np.sum(genomeSegmentsErrorCNi)
+			else:
+				centralizationErrorCNi = 0.0
+			#
+			CEDict[i] = centralizationErrorCNi
+		#-------------- Centralization-Error --------------#
+		CWDict = {0:1, 1:1, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1, 9:1, 10:1, 11:1, 12:1, 13:1, 14:1, 15:1, 16:1, 17:1, 18:1, 19:1, 20:1}		
 		centralizationError = 0
 		for i in CEDict.keys():
 			centralizationError = centralizationError + CEDict[i]*CWDict[i]
@@ -418,6 +482,8 @@ class AStra(object):
 		return centralizationError
 
 
+
+		
 
 	def findNearestPloidy(self):
 		"""
@@ -440,7 +506,7 @@ class AStra(object):
 		totalSegmentsWidth = np.sum(genomeSegmentsWidth)
 		#
 		spectrum = []
-		for i in range(2,5):
+		for i in range(1,9):
 			CNiMask = (genomeSegmentsStates == i)
 			genomeSegmentsWidthCNi  = genomeSegmentsWidth[CNiMask]
 			iSegmentsWidth = np.sum(genomeSegmentsWidthCNi)
@@ -449,23 +515,89 @@ class AStra(object):
 		#
 		ploidyIndex = spectrum.index(max(spectrum))
 		if(ploidyIndex == 0):
+			ploidyLevel = 'haploid'			
+		elif(ploidyIndex == 1):			
 			ploidyLevel = 'diploid'
-		elif(ploidyIndex == 1):
-			ploidyLevel = 'triploid'
 		elif(ploidyIndex == 2):
+			ploidyLevel = 'triploid'
+		elif(ploidyIndex == 3):
 			ploidyLevel = 'tetraploid'
-
-		######	
+		elif(ploidyIndex == 4):			
+			ploidyLevel = 'pentaploid'
+		elif(ploidyIndex == 5):
+			ploidyLevel = 'hexaploid'
+		elif(ploidyIndex == 6):
+			ploidyLevel = 'heptaploid'
+		elif(ploidyIndex == 7):
+			ploidyLevel = 'octaploid'
+		#
 		return ploidyLevel
 	
 
 
 
+	def findPloidyNumber(self):
+		"""
+		find the ploidy number as the average of the observed copy number states across the entire genome.
+		"""
+		genomeSegmentsRD    = np.array([]) 
+		genomeSegmentsWidth = np.array([]) 
+		
+		# RDs & widths of genome segments
+		chrSegments = self.ploidySegments
+		for chrom in chrSegments.keys():
+				chrSegmentsData     = chrSegments[chrom]
+				genomeSegmentsWidth = np.append(genomeSegmentsWidth, chrSegmentsData[:,2])
+				genomeSegmentsRD    = np.append(genomeSegmentsRD, chrSegmentsData[:,3])
+
+		# CNs of genome segments
+		genomeSegmentsCN = genomeSegmentsRD *2/self.copyNumberReference
+		genomeSegmentsStates = np.round(genomeSegmentsCN)
+		#
+		CNiMask = (genomeSegmentsStates != 0)
+		genomeSegmentsWidthCNi  = genomeSegmentsWidth[CNiMask]
+		genomeSegmentsStatesCNi = genomeSegmentsStates[CNiMask]
+		#
+		totalSegmentsWeightedWidth = np.sum(genomeSegmentsWidthCNi*genomeSegmentsStatesCNi)
+		totalSegmentsWidth = np.sum(genomeSegmentsWidthCNi)
+		
+		ploidyNumber = totalSegmentsWeightedWidth/totalSegmentsWidth 
+		#
+		return ploidyNumber
 
 
 
+		
+	def computeCS(self):
+		"""
+		Compute the centralization score.
+		"""
+		genomeSegmentsRD    = np.array([]) 
+		genomeSegmentsWidth = np.array([]) 
+		
+		# RDs & widths of genome segments
+		chrSegments = self.ploidySegments
+		for chrom in chrSegments.keys():
+				chrSegmentsData     = chrSegments[chrom]
+				genomeSegmentsWidth = np.append(genomeSegmentsWidth, chrSegmentsData[:,2])
+				genomeSegmentsRD    = np.append(genomeSegmentsRD, chrSegmentsData[:,3])
+		
+		# CNs of genome segments
+		genomeSegmentsCN     = genomeSegmentsRD *2/self.copyNumberReference
+		genomeSegmentsStates = np.round(genomeSegmentsCN)
 
-	############################################################################################################################################
+		# Centralization score	
+		nearStatesMask  = (abs(genomeSegmentsCN - genomeSegmentsStates) <= 0.25)
+		nearStatesWidth = np.sum(genomeSegmentsWidth[nearStatesMask])
+		totalSegmentsWidth   = np.sum(genomeSegmentsWidth)
+		CS = nearStatesWidth*100/totalSegmentsWidth		
+		#	
+		return CS
+
+		
+		
+		
+	############################################################################################################################################	
 	############################################################################################################################################
 	############################################################################################################################################
 	def writeAneuploidyResults(self):
@@ -478,15 +610,14 @@ class AStra(object):
 		inputFileName      = os.path.basename(self.inputFile)
 		inputFileNameNoExt = os.path.splitext(inputFileName)[0]
 		outputFilePath     = self.outputFolder + '/' + inputFileNameNoExt +  '_Chromosomal_Anueploidy.bed' 
-		outputFilePath2    = self.outputFolder + '/' + inputFileNameNoExt +  '_Ploidy_Results.bed' 	
 
-
-		######################################################## Chromosome Anueploidy #########################################################
+		
+		########### Chromosome Anueploidy ##########
 		# bed-file header of Chromosomal Anueploidy
 		fileID = open(outputFilePath, 'w')
 		fileID.write('track type=narrowPeak visibility=3 description="Chromosomal Anueploidy (col5: copy-number state, col7: copy-number)" \n');
 
-
+		
 		# bed-file data
 		for chrom in self.ploidySegments.keys():
 			#
@@ -509,9 +640,11 @@ class AStra(object):
 				fileID.write(lineData)
 		#
 		fileID.close()
-		#------------#
+		
 
 
+
+		
 	def writeAneuploidySpectrum(self, ploidyModelsError):
 		"""
 		outputs the aneuploidy spectrum 
@@ -521,244 +654,247 @@ class AStra(object):
 		#
 		inputFileName      = os.path.basename(self.inputFile)
 		inputFileNameNoExt = os.path.splitext(inputFileName)[0]
-		outputFilePath    = self.outputFolder + '/' + inputFileNameNoExt +  '_Ploidy_Results.bed' 	
+		outputFilePath    = self.outputFolder + '/' + inputFileNameNoExt +  '_Aneuploidy_Spectrum.bed' 	
 
-
-		########################################## Ploidy Spectrum ######################################
-
+		######################################### Main features ######################################
 		# text-file of the ploidy-result1
 		fileID2 = open(outputFilePath, 'w')
 		#
-		fileID2.write('Ploidy-Level = ' + self.ploidyLevel +'\n')
-		fileID2.write('Copy number reference = ' + str(self.copyNumberReference) +'\n')
-		#
+		fileID2.write('Ploidy number is ' + str(self.ploidyNumber) +'\n')
 		fileID2.write('\n')
+		#
+		fileID2.write('Copy number reference = ' + str(self.copyNumberReference) +'\n')
+		fileID2.write('Centralization error = ' + str(self.minimumCE) +'\n')
+		fileID2.write('Centralization score = ' + str(self.CS) +' %' +'\n')
+		fileID2.write('\n')
+		#
+		fileID2.write('RD signal median = ' + str(self.readDepthMedian) +'\n')
+		fileID2.write('Median/CN reference = ' + str(self.readDepthMedian/self.copyNumberReference) +'\n')
+
+		#################################### Aneuploidy spectrum #####################################		
+		if(self.aneuploidySpectrumMethod == 1):
+			# Segment-wise
+			genomeSegmentsRD    = np.array([]) 
+			genomeSegmentsWidth = np.array([])		
+			chrSegments = self.ploidySegments
+			for chrom in chrSegments.keys():
+				chrSegmentsData     = chrSegments[chrom]
+				genomeSegmentsWidth = np.append(genomeSegmentsWidth, chrSegmentsData[:,2])
+				genomeSegmentsRD    = np.append(genomeSegmentsRD, chrSegmentsData[:,3])
+		elif(self.aneuploidySpectrumMethod == 2):
+			# Segment-wise
+			genomeSegmentsRD    = np.array([]) 			
+			for chrom in self.readCounts.keys():
+				genomeSegmentsRD    = np.append(genomeSegmentsRD, self.readCounts[chrom])
+			genomeSegmentsWidth = np.ones(len(genomeSegmentsRD))
+
+		# CNs of genome segments
+		genomeSegmentsCN = genomeSegmentsRD *2/self.copyNumberReference
+		# states of gneome segments
+		genomeSegmentsStates = np.round(genomeSegmentsCN)
+		#
+		totalSegmentsWidth = np.sum(genomeSegmentsWidth)
+		#
+		for i in range(0,10):
+			CNiMask = (genomeSegmentsStates == i)
+			genomeSegmentsWidthCNi  = genomeSegmentsWidth[CNiMask]
+			iSegmentsWidth = np.sum(genomeSegmentsWidthCNi)
+			iSegmentsRatio = iSegmentsWidth*100/totalSegmentsWidth
+			fileID2.write('CN = ' + str(i) + ' : ' + str(iSegmentsRatio) +' %' + '\n')
+		#
+		CNiMask = (genomeSegmentsStates >= 10)
+		genomeSegmentsWidthCNi  = genomeSegmentsWidth[CNiMask]
+		iSegmentsWidth = np.sum(genomeSegmentsWidthCNi)
+		iSegmentsRatio = iSegmentsWidth*100/totalSegmentsWidth
+		fileID2.write('CN >= 10 : ' + str(iSegmentsRatio) +' %' + '\n')
+		fileID2.write('\n')
+
+		
+		################################# Additional features #######################################
+		fileID2.write('Ploidy state is ' + self.ploidyLevel +'\n')
+		fileID2.write('Ploidy model is ' + self.ploidyModel +'\n')		
 		#
 		i = 1;
 		for error in ploidyModelsError:
 			fileID2.write('CE (model' + str(i) + ')    = ' + str(error) +'\n')
 			i = i+1
 		fileID2.write('\n')
-		fileID2.write('\n')
-
-
-		################################################################################################
-		################################ Final-segments Statistics #####################################		
-		genomeSegmentsRD    = np.array([]) 
-		genomeSegmentsWidth = np.array([]) 
-		# RDs & widths of genome segments
-		chrSegments = self.ploidySegments
-		for chrom in chrSegments.keys():
-				chrSegmentsData     = chrSegments[chrom]
-				genomeSegmentsWidth = np.append(genomeSegmentsWidth, chrSegmentsData[:,2])
-				genomeSegmentsRD    = np.append(genomeSegmentsRD, chrSegmentsData[:,3])
-
-		# CNs of genome segments
-		genomeSegmentsCN = genomeSegmentsRD *2/self.copyNumberReference
-		# states of gneome segments
-		genomeSegmentsStates = np.round(genomeSegmentsCN)
-		##
-		totalSegmentsWidth = np.sum(genomeSegmentsWidth)
-		for i in range(0,10):
-			CNiMask = (genomeSegmentsStates == i)
-			genomeSegmentsWidthCNi  = genomeSegmentsWidth[CNiMask]
-			iSegmentsWidth = np.sum(genomeSegmentsWidthCNi)
-			iSegmentsRatio = iSegmentsWidth*100/totalSegmentsWidth
-			fileID2.write('CN = ' + str(i) + ' : ' + str(iSegmentsRatio) +' %' +' in '+ str(np.sum(CNiMask)) + ' segments' + '\n')
-		##
+		#
 		fileID2.write('\n')
 		fileID2.write('\n')
-
-
-		################################################################################################
-		########################################### Errors #############################################
-		##
-		nearStatesMask  = (abs(genomeSegmentsCN - genomeSegmentsStates) <= 0.25)
-		nearStatesWidth = np.sum(genomeSegmentsWidth[nearStatesMask])
-		nearStatesRatio = nearStatesWidth*100/totalSegmentsWidth
-		##
-		nearBoundariesMask  = (abs(genomeSegmentsCN - genomeSegmentsStates) > 0.25)
-		nearBoundariesWidth = np.sum(genomeSegmentsWidth[nearBoundariesMask])
-		nearBoundariesRatio     = nearBoundariesWidth*100/totalSegmentsWidth
-		##		
-		fileID2.write('Homogenous score : ' + str(nearStatesRatio) +' %' +'\n')
-		##
-		########################
-		########################
-		genomeRD = self.genomeRD
-		genomeCN = genomeRD *2/self.copyNumberReference
-		genomeStates = np.round(genomeCN)
-		genomeWidth = len(genomeRD)
-		##
-		state0Mask  = (genomeStates == 0)
-		state0Width = np.sum(state0Mask)
-		state0Ratio = state0Width*100/genomeWidth
-		##
-		state1Mask  = (genomeStates == 1)
-		state1Width = np.sum(state1Mask)
-		state1Ratio = state1Width*100/genomeWidth
-
-		##		
-		fileID2.write('Dispersion score: ' + str(state0Ratio) +' %' +'\n')
-		##
-		###############################################################################################
-		####################################### Median/ploidy ratio ###################################
-		if(self.ploidyLevel == 'diploid'):
-			peakValue = self.copyNumberReference
-		elif(self.ploidyLevel == 'triploid'):
-			peakValue = self.copyNumberReference*1.5
-		elif(self.ploidyLevel == 'tetraploid'):
-			peakValue = self.copyNumberReference*2
-		else:
-			raise ValueError('Error: ploidyLevel should be {diploid, triploid, or tetraploid}')	
-		ploidyMedianError = 100*abs(peakValue - self.readDepthMedian)/peakValue
-		####
-		fileID2.write('Median error:' + str(ploidyMedianError) +' %' +'\n')
-		fileID2.write('CN correction factor:' + str(self.readDepthMedian/peakValue) +' %' +'\n')
-		fileID2.write('\n')
-		fileID2.write('\n')
-
-
-
-		##############
 		fileID2.close()
-		#------------#
 
 
-	def ploidySpectrum(self):
+		
+
+
+	def getAneuploidySpectrum(self):
 		"""
-		return the ploidy spectrum info
+		return the information of the aneuploidy spectrum
 		"""
 
 		spectrum = []
-		####################################### Ploidy & CE ###################################
-		if(self.ploidyLevel == 'diploid'):
-			ploidyNumber = 2
-		elif(self.ploidyLevel == 'triploid'):
-			ploidyNumber = 3
-		elif(self.ploidyLevel == 'tetraploid'):
-			ploidyNumber = 4
-		else:
-			raise ValueError('Error: ploidyLevel should be {diploid, triploid, or tetraploid}')	
-		spectrum.append(ploidyNumber)
-		#
-		genomeRD = []
-		for chrom in self.readCounts.keys():
-			chrRD = self.readCounts[chrom]
-			genomeRD = np.append(genomeRD, chrRD)
-		spectrum.append(np.sum(genomeRD))	
-		#
-		for error in self.centralizationErrors:
-			spectrum.append(error)
-
-		#######################################################################################
-		########################################## Errors #####################################	
-		genomeSegmentsRD    = np.array([]) 
-		genomeSegmentsWidth = np.array([]) 
 		
-		# RDs & widths of genome segments
-		chrSegments = self.ploidySegments
-		for chrom in chrSegments.keys():
-				chrSegmentsData  = chrSegments[chrom]
+		################################# Main features ###################################
+		spectrum.append(self.ploidyNumber)
+		spectrum.append(self.copyNumberReference)
+		spectrum.append(self.minimumCE)
+		spectrum.append(self.CS)
+		spectrum.append(self.readDepthMedian)
+		spectrum.append(self.readDepthMedian/self.copyNumberReference)
+		
+		############################# Aneuploidy spectrum ################################
+		if(self.aneuploidySpectrumMethod == 1):
+			# Segment-wise
+			genomeSegmentsRD    = np.array([]) 
+			genomeSegmentsWidth = np.array([])		
+			chrSegments = self.ploidySegments
+			for chrom in chrSegments.keys():
+				chrSegmentsData     = chrSegments[chrom]
 				genomeSegmentsWidth = np.append(genomeSegmentsWidth, chrSegmentsData[:,2])
 				genomeSegmentsRD    = np.append(genomeSegmentsRD, chrSegmentsData[:,3])
+		elif(self.aneuploidySpectrumMethod == 2):
+			# Segment-wise
+			genomeSegmentsRD    = np.array([]) 			
+			for chrom in self.readCounts.keys():
+				genomeSegmentsRD    = np.append(genomeSegmentsRD, self.readCounts[chrom])
+			genomeSegmentsWidth = np.ones(len(genomeSegmentsRD))
 
-		# CNs of genome segments
+		#
 		genomeSegmentsCN = genomeSegmentsRD *2/self.copyNumberReference
-		# states of gneome segments
 		genomeSegmentsStates = np.round(genomeSegmentsCN)
-		#
 		totalSegmentsWidth = np.sum(genomeSegmentsWidth)
-		for i in range(0,10):
-			CNiMask = (genomeSegmentsStates == i)
-			genomeSegmentsWidthCNi  = genomeSegmentsWidth[CNiMask]
-			iSegmentsWidth = np.sum(genomeSegmentsWidthCNi)
-			iSegmentsRatio = iSegmentsWidth*100/totalSegmentsWidth
-		##
-		nearStatesMask  = (abs(genomeSegmentsCN - genomeSegmentsStates) <= 0.25)
-		nearStatesWidth = np.sum(genomeSegmentsWidth[nearStatesMask])
-		nearStatesRatio = nearStatesWidth*100/totalSegmentsWidth
-		##
-		nearBoundariesMask  = (abs(genomeSegmentsCN - genomeSegmentsStates) > 0.25)
-		nearBoundariesWidth = np.sum(genomeSegmentsWidth[nearBoundariesMask])
-		nearBoundariesRatio     = nearBoundariesWidth*100/totalSegmentsWidth
-		##		
-		spectrum.append(nearStatesRatio)
-
-
-		########################
-		genomeRD = self.genomeRD
-		genomeCN = genomeRD *2/self.copyNumberReference
-		genomeStates = np.round(genomeCN)
-		genomeWidth = len(genomeRD)
-		##
-		state0Mask  = (genomeStates == 0)
-		state0Width = np.sum(state0Mask)
-		state0Ratio = state0Width*100/genomeWidth
-		##
-		state1Mask  = (genomeStates == 1)
-		state1Width = np.sum(state1Mask)
-		state1Ratio = state1Width*100/genomeWidth
-		##	
-		spectrum.append(state0Ratio)	
-
-
-		##################################
-		if(self.ploidyLevel == 'diploid'):
-			peakValue = self.copyNumberReference
-			ploidyNumber = 2
-		elif(self.ploidyLevel == 'triploid'):
-			peakValue = self.copyNumberReference*1.5
-			ploidyNumber = 3
-		elif(self.ploidyLevel == 'tetraploid'):
-			peakValue = self.copyNumberReference*2
-			ploidyNumber = 4
-		else:
-			raise ValueError('Error: ploidyLevel should be {diploid, triploid, or tetraploid}')	
-		ploidyMedianError = 100*abs(peakValue - self.readDepthMedian)/peakValue
-		spectrum.append(ploidyMedianError)	
-		spectrum.append(self.readDepthMedian/peakValue)
-
-
-		#######################################################################################
-		######################################## Spectrum #####################################	
-		genomeSegmentsRD    = np.array([]) 
-		genomeSegmentsWidth = np.array([]) 
-		
-		# RDs & widths of genome segments
-		chrSegments = self.ploidySegments
-		for chrom in chrSegments.keys():
-				chrSegmentsData  = chrSegments[chrom]
-				genomeSegmentsWidth = np.append(genomeSegmentsWidth, chrSegmentsData[:,2])
-				genomeSegmentsRD    = np.append(genomeSegmentsRD, chrSegmentsData[:,3])
-
-		# CNs of genome segments
-		genomeSegmentsCN = genomeSegmentsRD *2/self.copyNumberReference
-		# states of gneome segments
-		genomeSegmentsStates = np.round(genomeSegmentsCN)
-		#
-		totalSegmentsWidth = np.sum(genomeSegmentsWidth)
-		#
+		#		
 		for i in range(0,10):
 			CNiMask = (genomeSegmentsStates == i)
 			genomeSegmentsWidthCNi  = genomeSegmentsWidth[CNiMask]
 			iSegmentsWidth = np.sum(genomeSegmentsWidthCNi)
 			iSegmentsRatio = iSegmentsWidth*100/totalSegmentsWidth
 			spectrum.append(iSegmentsRatio)
+		#
+		CNiMask = (genomeSegmentsStates >= 10)
+		genomeSegmentsWidthCNi  = genomeSegmentsWidth[CNiMask]
+		iSegmentsWidth = np.sum(genomeSegmentsWidthCNi)
+		iSegmentsRatio = iSegmentsWidth*100/totalSegmentsWidth
+		spectrum.append(iSegmentsRatio)		
+		
+		################################# Additional features ############################
+		if(self.ploidyLevel == 'haploid'):
+			ploidyState = 1		
+		elif(self.ploidyLevel == 'diploid'):
+			ploidyState = 2		
+		elif(self.ploidyLevel == 'triploid'):
+			ploidyState = 3
+		elif(self.ploidyLevel == 'tetraploid'):
+			ploidyState = 4	
+		elif(self.ploidyLevel == 'pentaploid'):
+			ploidyState = 5		
+		elif(self.ploidyLevel == 'hexaploid'):
+			ploidyState = 6
+		elif(self.ploidyLevel == 'heptaploid'):
+			ploidyState = 7				
+		elif(self.ploidyLevel == 'octaploid'):
+			ploidyState = 8				
+		else:
+			raise ValueError('Error: genome-wide ploidy level is not from {haploid, diploid, triploid, tetraploid, pentaploid, hexaploid, heptaploid, octaploid}')	
+		####	
+		if(self.ploidyModel == 'model1'):
+			ploidyModel = 1		
+		elif(self.ploidyModel == 'model2'):
+			ploidyModel = 2		
+		elif(self.ploidyModel == 'model3'):
+			ploidyModel = 3
+		elif(self.ploidyModel == 'model4'):
+			ploidyModel = 4	
+		elif(self.ploidyModel == 'model5'):
+			ploidyModel = 5		
+		elif(self.ploidyModel == 'model6'):
+			ploidyModel = 6
+		elif(self.ploidyModel == 'model7'):
+			ploidyModel = 7				
+		else:
+			raise ValueError('Error: genome-wide ploidy Model is not from model 1 to model 7')	
+		####
+		spectrum.append(ploidyState)
+		spectrum.append(ploidyModel)
+		# Models Centralization errors
+		for error in self.centralizationErrors:
+			spectrum.append(error)
 
-		for i in range(0,10):
-			CNiMask = (genomeSegmentsStates == i)
-			spectrum.append(np.sum(CNiMask))
-
-		######	
+		###############
 		return spectrum
 
 
 
 
-	def plotAneuploidy(self, chrName):
+
+
+
+
+		
+	############################################################################################################################################	
+	############################################################################################################################################
+	############################################################################################################################################
+	def genomeDataForPlot(self):
 		"""
-		plot resulted-segments of a chromosome
+		return the RD signal and segments of the genome.
+		"""		
+		genomeRDsignal     = np.array([])
+		genomeBkps         = list()
+		genomeChrStarts    = [0]
+		startIndex         = 0
+		genomeLengthInBins = 0
+		
+		###########################
+		noChrs = len(self.chrNames)
+		chrNames = []
+		for i in range(1,noChrs):
+			chrNames = chrNames + ['chr'+str(i)]
+		chrNames = chrNames + ['chrX']
+
+		chrIndex = 1
+		for chrName in chrNames:	
+			chrRDSignal    = self.readCounts[chrName]*2/self.copyNumberReference
+			#
+			chrPloidyData  = self.ploidySegments[chrName]
+			chrPloidyStart = chrPloidyData[:,0].astype(int)
+			chrPloidyStart = chrPloidyStart + startIndex
+			#
+			chrLength       = self.chrLengths[chrName]
+			binSize    	    = self.binSize
+			chrLengthInBins = math.ceil(chrLength/binSize)
+			genomeLengthInBins = genomeLengthInBins + chrLengthInBins
+			#
+			if(chrIndex == 1):
+				if(len(chrPloidyStart) > 1):
+					bkps = list(chrPloidyStart[1:])	
+				else:	
+					bkps = []
+			elif(chrIndex == noChrs):
+					bkps = np.concatenate((chrPloidyStart[0:], [genomeLengthInBins]))
+					bkps = list(bkps)	
+			else:	
+					bkps = list(chrPloidyStart)			
+			#
+			genomeRDsignal  = np.concatenate((genomeRDsignal,chrRDSignal))
+			genomeBkps      = genomeBkps +  bkps
+			startIndex      = startIndex + chrLengthInBins
+			genomeChrStarts = genomeChrStarts + [startIndex]
+			chrIndex        = chrIndex + 1
+		####
+		out = dict()
+		out['a'] = genomeRDsignal
+		out['b'] = genomeBkps
+		out['c'] = genomeChrStarts
+		return out	
+		#---------------------------------------------------------------------------------------------------#
+
+
+
+
+	def plotChrAneuploidy(self, chrName):
+		"""
+		plot the resulted segments of a chromosome.
 		"""
 		chrRDSignal    = self.readCounts[chrName]*2/self.copyNumberReference
 		#
@@ -774,7 +910,6 @@ class AStra(object):
 		else:	
 			bkps = [chrLengthInBins]
 		
-		#############################
 		######### Plotting ##########
 		CNmax = 10
 		signal = np.clip(chrRDSignal,0,CNmax)
@@ -785,7 +920,7 @@ class AStra(object):
 		n_samples, n_features = signal.shape 
 
 		COLOR_CYCLE = ["#4286f4", "#f44174"]
-		figsize = (10, 2 * n_features)  # figure size
+		figsize = (10, 3 * n_features)  # figure size
 		alpha = 0.2  # transparency of the colored background
 		#
 		fig, axarr = plt.subplots(n_features, figsize=figsize, sharex=True)
@@ -802,13 +937,506 @@ class AStra(object):
 			for (start, end), col in zip(pairwise(bkps), color_cycle): 
 				axe.axvspan(max(0, start - 0.5), end - 0.5, facecolor=col, alpha=alpha)
 		#
-		plt.title(chrName)
-		plt.xlabel('Bin number')
-		plt.ylabel('Copy number')
+		plt.title(chrName, fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('Copy number', fontweight="bold", fontsize=12)
 		plt.show()
 		#--------#
 
 
+
+
+	def saveChrAneuploidy(self, chrName):
+		"""
+		save the resulted segments of a chromosome.
+		"""
+		chrRDSignal    = self.readCounts[chrName]*2/self.copyNumberReference
+		#
+		chrPloidyData  = self.ploidySegments[chrName]
+		chrPloidyStart = chrPloidyData[:,0].astype(int)
+		#
+		chrLength       = self.chrLengths[chrName]
+		binSize    	    = self.binSize
+		chrLengthInBins = math.ceil(chrLength/binSize)
+		if(len(chrPloidyStart) > 1):
+			bkps = np.concatenate((chrPloidyStart[1:], [chrLengthInBins]))
+			bkps = list(bkps)	
+		else:	
+			bkps = [chrLengthInBins]
+		
+		######### Plotting ##########
+		CNmax = 10
+		signal = np.clip(chrRDSignal,0,CNmax)
+		true_chg_pts = bkps
+		#
+		if signal.ndim == 1:
+			signal = signal.reshape(-1, 1)
+		n_samples, n_features = signal.shape 
+
+		COLOR_CYCLE = ["#4286f4", "#f44174"]
+		figsize = (10, 3 * n_features)  # figure size
+		alpha = 0.2  # transparency of the colored background
+		#
+		fig, axarr = plt.subplots(n_features, figsize=figsize, sharex=True)
+		if n_features == 1:
+			axarr = [axarr]
+		for axe, sig in zip(axarr, signal.T):
+			color_cycle = cycle(COLOR_CYCLE)
+			# plot s
+			axe.plot(range(n_samples), sig, linestyle = 'None',marker = '.', markersize = 2)
+
+			# color each (true) regime
+			bkps = [0] + sorted(true_chg_pts)
+
+			for (start, end), col in zip(pairwise(bkps), color_cycle): 
+				axe.axvspan(max(0, start - 0.5), end - 0.5, facecolor=col, alpha=alpha)
+		#
+		plt.title(chrName, fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('Copy number', fontweight="bold", fontsize=12)
+
+		inputFileName      = os.path.basename(self.inputFile)
+		inputFileNameNoExt = os.path.splitext(inputFileName)[0]		
+		plt.savefig(self.outputFolder + '/' + inputFileNameNoExt + '_' + chrName + '_AneuploidySegments.png')
+		plt.close()
+		#---------------------------------------------------------------------------------------------------#
+
+
+
+
+	def plotGenomeAneuploidy(self, CNmax, delTh, ampTh):
+		"""
+		plot the resulted segments of the genome.
+		"""
+		genomeData     = self.genomeDataForPlot()
+		genomeRDsignal = genomeData['a']
+		genomeBkps     = genomeData['b']
+		genomeStarts   = genomeData['c']
+		
+		############# Plotting #########
+		signal = np.clip(genomeRDsignal,0,CNmax)
+		true_chg_pts  = genomeBkps
+		true_chg_pts2 = genomeStarts
+		#
+		if signal.ndim == 1:
+			signal = signal.reshape(-1, 1)
+		n_samples, n_features = signal.shape 
+
+		COLOR_CYCLE = ["#afafaf", "#010101"]
+		figsize = (10, 3 * n_features)  # figure size
+		alpha = 0.2  # transparency of the colored background
+		#
+		fig, axarr = plt.subplots(n_features, figsize=figsize, sharex=True)
+		if n_features == 1:
+			axarr = [axarr]
+
+		for axe, sig in zip(axarr, signal.T):
+			#
+			bkps = [0] + sorted(true_chg_pts)
+			startIndices = bkps[0:-1]
+			endIndices   = bkps[1:]
+			noGenomeSegments = len(startIndices)
+			for i in range(0,noGenomeSegments):
+				start = startIndices[i]
+				end   = endIndices[i]
+				segmentCN = np.median(sig[start:end])
+				if(segmentCN <= delTh):
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#010101")
+				elif(segmentCN >= ampTh):
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#ff0000")					
+				else:
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#0000ff")					
+
+			color_cycle = cycle(COLOR_CYCLE)
+			# color each (true) regime
+			bkps = sorted(true_chg_pts2)
+			for (start, end), col in zip(pairwise(bkps), color_cycle): 
+				axe.axvspan(max(0, start - 0.5), end - 0.5, facecolor=col, alpha=alpha)
+		#
+		plt.xlim([0, len(signal)])
+		plt.ylim([0, CNmax])
+		plt.title('Genome', fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('Copy number', fontweight="bold", fontsize=12)
+		plt.show()
+		#--------#
+
+
+
+
+	def saveGenomeAneuploidy(self, CNmax, delTh, ampTh):
+		"""
+		plot the resulted segments of the genome.
+		"""
+		genomeData     = self.genomeDataForPlot()
+		genomeRDsignal = genomeData['a']
+		genomeBkps     = genomeData['b']
+		genomeStarts   = genomeData['c']
+		
+		############# Plotting #########
+		signal = np.clip(genomeRDsignal,0,CNmax)
+		true_chg_pts  = genomeBkps
+		true_chg_pts2 = genomeStarts
+		#
+		if signal.ndim == 1:
+			signal = signal.reshape(-1, 1)
+		n_samples, n_features = signal.shape 
+
+		COLOR_CYCLE = ["#afafaf", "#010101"]
+		figsize = (10, 3 * n_features)  # figure size
+		alpha = 0.2  # transparency of the colored background
+		#
+		fig, axarr = plt.subplots(n_features, figsize=figsize, sharex=True)
+		if n_features == 1:
+			axarr = [axarr]
+
+		for axe, sig in zip(axarr, signal.T):
+			#
+			bkps = [0] + sorted(true_chg_pts)
+			startIndices = bkps[0:-1]
+			endIndices   = bkps[1:]
+			noGenomeSegments = len(startIndices)
+			for i in range(0,noGenomeSegments):
+				start = startIndices[i]
+				end   = endIndices[i]
+				segmentCN = np.median(sig[start:end])
+				if(segmentCN <= delTh):
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#010101")
+				elif(segmentCN >= ampTh):
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#ff0000")					
+				else:
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#0000ff")					
+
+			color_cycle = cycle(COLOR_CYCLE)
+			# color each (true) regime
+			bkps = sorted(true_chg_pts2)
+			for (start, end), col in zip(pairwise(bkps), color_cycle): 
+				axe.axvspan(max(0, start - 0.5), end - 0.5, facecolor=col, alpha=alpha)
+		#
+		plt.xlim([0, len(signal)])
+		plt.ylim([0, CNmax])
+		plt.title('Genome', fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('Copy number', fontweight="bold", fontsize=12)
+		#
+		inputFileName      = os.path.basename(self.inputFile)
+		inputFileNameNoExt = os.path.splitext(inputFileName)[0]
+		plt.savefig(self.outputFolder + '/' + inputFileNameNoExt + '_GenomeAneuploidyWithChrsMarkers.png')
+		plt.close()
+		#---------#	
+
+
+
+
+
+
+	def plotGenomeAneuploidy2(self, CNmax, delTh, ampTh):
+		"""
+		plot the resulted segments of the genome.
+		"""
+		genomeData     = self.genomeDataForPlot()
+		genomeRDsignal = genomeData['a']
+		genomeBkps     = genomeData['b']
+		
+		############# Plotting #########
+		signal = np.clip(genomeRDsignal,0,CNmax)
+		true_chg_pts = genomeBkps
+		#
+		if signal.ndim == 1:
+			signal = signal.reshape(-1, 1)
+		n_samples, n_features = signal.shape 
+
+		COLOR_CYCLE = ["#5f5f5f", "#010101"]
+		figsize = (10, 3 * n_features)  # figure size
+		alpha = 0.2  # transparency of the colored background
+		#
+		fig, axarr = plt.subplots(n_features, figsize=figsize, sharex=True)
+		if n_features == 1:
+			axarr = [axarr]
+
+		for axe, sig in zip(axarr, signal.T):
+			#
+			color_cycle = cycle(COLOR_CYCLE)
+			# color each (true) regime
+			bkps = [0] + sorted(true_chg_pts)
+			startIndices = bkps[0:-1]
+			endIndices   = bkps[1:]
+			noGenomeSegments = len(startIndices)
+			for i in range(0,noGenomeSegments):
+				start = startIndices[i]
+				end   = endIndices[i]
+				segmentCN = np.median(sig[start:end])
+				if(segmentCN <= delTh):
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#010101")
+				elif(segmentCN >= ampTh):
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#ff0000")					
+				else:
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#0000ff")					
+		#
+		plt.xlim([0, len(signal)])
+		plt.ylim([0, CNmax])		
+		plt.title('Genome', fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('Copy number', fontweight="bold", fontsize=12)
+		plt.show()
+		#--------#
+
+
+
+	def saveGenomeAneuploidy2(self, CNmax, delTh, ampTh):
+		"""
+		plot the resulted segments of the genome.
+		"""
+		genomeData     = self.genomeDataForPlot()
+		genomeRDsignal = genomeData['a']
+		genomeBkps     = genomeData['b']
+		
+		############# Plotting #########
+		signal = np.clip(genomeRDsignal,0,CNmax)
+		true_chg_pts = genomeBkps
+		#
+		if signal.ndim == 1:
+			signal = signal.reshape(-1, 1)
+		n_samples, n_features = signal.shape 
+
+		COLOR_CYCLE = ["#5f5f5f", "#010101"]
+		figsize = (10, 3 * n_features)  # figure size
+		alpha = 0.2  # transparency of the colored background
+		#
+		fig, axarr = plt.subplots(n_features, figsize=figsize, sharex=True)
+		if n_features == 1:
+			axarr = [axarr]
+
+		for axe, sig in zip(axarr, signal.T):
+			#
+			color_cycle = cycle(COLOR_CYCLE)
+			# color each (true) regime
+			bkps = [0] + sorted(true_chg_pts)
+			startIndices = bkps[0:-1]
+			endIndices   = bkps[1:]
+			noGenomeSegments = len(startIndices)
+			for i in range(0,noGenomeSegments):
+				start = startIndices[i]
+				end   = endIndices[i]
+				segmentCN = np.median(sig[start:end])
+				if(segmentCN <= delTh):
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#010101")
+				elif(segmentCN >= ampTh):
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#ff0000")					
+				else:
+					axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = "#0000ff")					
+		#
+		plt.xlim([0, len(signal)])
+		plt.ylim([0, CNmax])
+		plt.title('Genome', fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('Copy number', fontweight="bold", fontsize=12)
+		#
+		inputFileName      = os.path.basename(self.inputFile)
+		inputFileNameNoExt = os.path.splitext(inputFileName)[0]
+		plt.savefig(self.outputFolder + '/' + inputFileNameNoExt + '_GenomeAneuploidy.png')
+		plt.close()
+		#---------#	
+
+
+
+	def plotGenomeAneuploidy3(self, CNmax, delTh, ampTh):
+		"""
+		plot the resulted segments of the genome.
+		"""
+		genomeData     = self.genomeDataForPlot()
+		genomeRDsignal = genomeData['a']
+		genomeBkps     = genomeData['b']
+		
+		############# Plotting #########
+		CMin  = 0.5
+		signal = np.clip(genomeRDsignal,CMin,CNmax)
+		true_chg_pts = genomeBkps
+		#
+		if signal.ndim == 1:
+			signal = signal.reshape(-1, 1)
+		n_samples, n_features = signal.shape 
+
+		COLOR_CYCLE = ["#5f5f5f", "#010101"]
+		figsize = (10, 3 * n_features)  # figure size
+		alpha = 0.2  # transparency of the colored background
+		#
+		fig, axarr = plt.subplots(n_features, figsize=figsize, sharex=True)
+		if n_features == 1:
+			axarr = [axarr]
+
+		for axe, sig in zip(axarr, signal.T):
+			#
+			color_cycle = cycle(COLOR_CYCLE)
+			# color each (true) regime
+			bkps = [0] + sorted(true_chg_pts)
+			for (start, end), col in zip(pairwise(bkps), color_cycle): 
+				segmentCN = np.median(sig[start:end])
+				if(segmentCN <= delTh):
+					axe.plot(list(range(start, end)), np.log2(sig[start:end]/2), linestyle = 'None',marker = '.', markersize = 2, color = "#010101")
+				elif(segmentCN >= ampTh):
+					axe.plot(list(range(start, end)), np.log2(sig[start:end]/2), linestyle = 'None',marker = '.', markersize = 2, color = "#ff0000")					
+				else:
+					axe.plot(list(range(start, end)), np.log2(sig[start:end]/2), linestyle = 'None',marker = '.', markersize = 2, color = "#0000ff")					
+		#
+		plt.xlim([0, len(signal)])
+		plt.ylim([0, CNmax])
+		plt.title('Genome', fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('log2(CN/2)', fontweight="bold", fontsize=12)
+		plt.show()
+		#--------#
+
+
+
+
+	def saveGenomeAneuploidy3(self, CNmax, delTh, ampTh):
+		"""
+		plot the resulted segments of the genome.
+		"""
+		genomeData     = self.genomeDataForPlot()
+		genomeRDsignal = genomeData['a']
+		genomeBkps     = genomeData['b']
+		
+		############# Plotting #########
+		CMin  = 0.5
+		signal = np.clip(genomeRDsignal,CMin,CNmax)
+		true_chg_pts = genomeBkps
+		#
+		if signal.ndim == 1:
+			signal = signal.reshape(-1, 1)
+		n_samples, n_features = signal.shape 
+
+		COLOR_CYCLE = ["#5f5f5f", "#010101"]
+		figsize = (10, 3 * n_features)  # figure size
+		alpha = 0.2  # transparency of the colored background
+		#
+		fig, axarr = plt.subplots(n_features, figsize=figsize, sharex=True)
+		if n_features == 1:
+			axarr = [axarr]
+
+		for axe, sig in zip(axarr, signal.T):
+			#
+			color_cycle = cycle(COLOR_CYCLE)
+			# color each (true) regime
+			bkps = [0] + sorted(true_chg_pts)
+			for (start, end), col in zip(pairwise(bkps), color_cycle): 
+				segmentCN = np.median(sig[start:end])
+				if(segmentCN <= delTh):
+					axe.plot(list(range(start, end)), np.log2(sig[start:end]/2), linestyle = 'None',marker = '.', markersize = 2, color = "#010101")
+				elif(segmentCN >= ampTh):
+					axe.plot(list(range(start, end)), np.log2(sig[start:end]/2), linestyle = 'None',marker = '.', markersize = 2, color = "#ff0000")					
+				else:
+					axe.plot(list(range(start, end)), np.log2(sig[start:end]/2), linestyle = 'None',marker = '.', markersize = 2, color = "#0000ff")					
+		#
+		plt.xlim([0, len(signal)])
+		plt.ylim([0, CNmax])
+		plt.title('Genome', fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('log2(CN/2)', fontweight="bold", fontsize=12)
+		#
+		inputFileName      = os.path.basename(self.inputFile)
+		inputFileNameNoExt = os.path.splitext(inputFileName)[0]
+		plt.savefig(self.outputFolder + '/' + inputFileNameNoExt + '_GenomeAneuploidy_logScale.png')
+		plt.close()
+		#---------#		
+
+
+
+
+	def plotGenomeAneuploidy4(self):
+		"""
+		plot the resulted segments of the genome.
+		"""
+		genomeData     = self.genomeDataForPlot()
+		genomeRDsignal = genomeData['a']
+		genomeBkps     = genomeData['b']
+
+		############# Plotting #########
+		CNmax = 8
+		signal = np.clip(genomeRDsignal,0,CNmax)
+		true_chg_pts = genomeBkps
+		#
+		if signal.ndim == 1:
+			signal = signal.reshape(-1, 1)
+		n_samples, n_features = signal.shape 
+
+		COLOR_CYCLE = ["#5f5f5f", "#010101"]
+		figsize = (10, 3 * n_features)  # figure size
+		alpha = 0.2  # transparency of the colored background
+		#
+		fig, axarr = plt.subplots(n_features, figsize=figsize, sharex=True)
+		if n_features == 1:
+			axarr = [axarr]
+
+		for axe, sig in zip(axarr, signal.T):
+			#
+			color_cycle = cycle(COLOR_CYCLE)
+			# color each (true) regime
+			bkps = [0] + sorted(true_chg_pts)
+			for (start, end), col in zip(pairwise(bkps), color_cycle): 
+				axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = col)
+
+
+		#
+		plt.xlim([0, len(signal)])
+		plt.ylim([0, CNmax])		
+		plt.title('Genome', fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('Copy number', fontweight="bold", fontsize=12)
+		plt.show()
+		#--------#
+
+		
+
+
+	def saveGenomeAneuploidy4(self):
+		"""
+		plot the resulted segments of the genome.
+		"""
+		genomeData     = self.genomeDataForPlot()
+		genomeRDsignal = genomeData['a']
+		genomeBkps     = genomeData['b']
+
+		############# Plotting #########
+		CNmax = 8
+		signal = np.clip(genomeRDsignal,0,CNmax)
+		true_chg_pts = genomeBkps
+		#
+		if signal.ndim == 1:
+			signal = signal.reshape(-1, 1)
+		n_samples, n_features = signal.shape 
+
+		COLOR_CYCLE = ["#5f5f5f", "#010101"]
+		figsize = (10, 3 * n_features)  # figure size
+		alpha = 0.2  # transparency of the colored background
+		#
+		fig, axarr = plt.subplots(n_features, figsize=figsize, sharex=True)
+		if n_features == 1:
+			axarr = [axarr]
+
+		for axe, sig in zip(axarr, signal.T):
+			#
+			color_cycle = cycle(COLOR_CYCLE)
+			# color each (true) regime
+			bkps = [0] + sorted(true_chg_pts)
+			for (start, end), col in zip(pairwise(bkps), color_cycle): 
+				axe.plot(list(range(start, end)), sig[start:end], linestyle = 'None',marker = '.', markersize = 2, color = col)
+
+
+		#
+		plt.xlim([0, len(signal)])
+		plt.ylim([0, CNmax])
+		plt.title('Genome', fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('Copy number', fontweight="bold", fontsize=12)
+		#
+		inputFileName      = os.path.basename(self.inputFile)
+		inputFileNameNoExt = os.path.splitext(inputFileName)[0]
+		plt.savefig(self.outputFolder + '/' + inputFileNameNoExt + '_GenomeAneuploidy_Segments.png')
+		plt.close()
+		#---------#	
+		
 
 	def plotGenome(self):
 		"""
@@ -820,7 +1448,7 @@ class AStra(object):
 		#
 		genomeCN = genomeRD*2/self.copyNumberReference
 		######### Plotting ##########
-		CNmax = 10
+		CNmax = 8
 		signal = np.clip(genomeCN,0,CNmax)
 		#
 		plt.figure()
@@ -831,16 +1459,11 @@ class AStra(object):
 		plt.plot([0,len(signal)],[4, 4],'k--')
 		plt.plot([0,len(signal)],[5, 5],'k--')
 
-		plt.title('Genome')
-		plt.xlabel('Bin number')
-		plt.ylabel('Copy number')
-
-		inputFileName      = os.path.basename(self.inputFile)
-		inputFileNameNoExt = os.path.splitext(inputFileName)[0]
+		plt.title('Genome', fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('Copy number', fontweight="bold", fontsize=12)
 		plt.show()
 		#--------#
-
-
 
 
 	def saveGenome(self):
@@ -853,7 +1476,7 @@ class AStra(object):
 		#
 		genomeCN = genomeRD*2/self.copyNumberReference
 		######### Plotting ##########
-		CNmax = 10
+		CNmax = 8
 		signal = np.clip(genomeCN,0,CNmax)
 		#
 		plt.figure()
@@ -864,15 +1487,18 @@ class AStra(object):
 		plt.plot([0,len(signal)],[4, 4],'k--')
 		plt.plot([0,len(signal)],[5, 5],'k--')
 
-		plt.title('Genome')
-		plt.xlabel('Bin number')
-		plt.ylabel('Copy number')
+		plt.title('Genome', fontweight="bold", fontsize=12)
+		plt.xlabel('Bin number', fontweight="bold", fontsize=12)
+		plt.ylabel('Copy number', fontweight="bold", fontsize=12)
+
 
 		inputFileName      = os.path.basename(self.inputFile)
 		inputFileNameNoExt = os.path.splitext(inputFileName)[0]
 		plt.savefig(self.outputFolder + '/' + inputFileNameNoExt + '_GenomeRD.png')
-		#--------#
+		plt.close()
+		#---------#
 
+		
 
 
 	def plotHistogram(self, nbins):
@@ -899,16 +1525,6 @@ class AStra(object):
 		plt.plot([(2.5*self.copyNumberReference), (2.5*self.copyNumberReference)],[0,max(n[0])],'k--')
 		plt.plot([(3*self.copyNumberReference), (3*self.copyNumberReference)],[0,max(n[0])],'k--')		
 		####
-		if(self.ploidyLevel == 'diploid'):
-			plt.plot([self.copyNumberReference, self.copyNumberReference],[0,max(n[0])],'k', lineWidth = 2)
-		elif(self.ploidyLevel == 'triploid'):
-			plt.plot([1.5*self.copyNumberReference, 1.5*self.copyNumberReference],[0,max(n[0])],'k', lineWidth = 2)
-		elif(self.ploidyLevel == 'tetraploid'):
-			plt.plot([2*self.copyNumberReference, 2*self.copyNumberReference],[0,max(n[0])],'k', lineWidth = 2)
-		else:
-			raise ValueError('Error: ploidyLevel should be {diploid, triploid, or tetraploid}')	
-
-
 		plt.show()
 		#--------#
 
@@ -938,15 +1554,6 @@ class AStra(object):
 		plt.plot([(2.5*self.copyNumberReference), (2.5*self.copyNumberReference)],[0,max(n[0])],'k--')
 		plt.plot([(3*self.copyNumberReference), (3*self.copyNumberReference)],[0,max(n[0])],'k--')		
 		####
-		if(self.ploidyLevel == 'diploid'):
-			plt.plot([self.copyNumberReference, self.copyNumberReference],[0,max(n[0])],'k', lineWidth = 2)
-		elif(self.ploidyLevel == 'triploid'):
-			plt.plot([1.5*self.copyNumberReference, 1.5*self.copyNumberReference],[0,max(n[0])],'k', lineWidth = 2)
-		elif(self.ploidyLevel == 'tetraploid'):
-			plt.plot([2*self.copyNumberReference, 2*self.copyNumberReference],[0,max(n[0])],'k', lineWidth = 2)
-		else:
-			raise ValueError('Error: ploidyLevel should be {diploid, triploid, or tetraploid}')	
-
 		inputFileName      = os.path.basename(self.inputFile)
 		inputFileNameNoExt = os.path.splitext(inputFileName)[0]
 		plt.savefig(self.outputFolder + '/' + inputFileNameNoExt + '_' + str(nbins) + 'bin_GenomeHistogram.png')
@@ -957,17 +1564,18 @@ class AStra(object):
 
 
 
-	########################################################################################################################
-	########################################################################################################################
-	########################################################################################################################
-	def ploidyEstimatorPipeline(self):
-		"""
-		the complete pipeline for estimating the ploidy level of the sequencing data 
-		and write the output files.	
-		"""
-		# RD-calculation
-		self.readsCounting()
 
+	###################################################################################################################################	
+	###################################################################################################################################
+	###################################################################################################################################
+	def runAStra(self):
+		"""
+		the pipeline for estimating the aneuploidy spectrum of the WGS data 
+		and generating the output files using our 6 models.	
+		"""
+
+		############################## RD-calculation ############################
+		self.readsCounting()
 		# Filtering & Segmentation
 		genomeRD  = np.array([]) 
 		for chrom in self.readCounts.keys():
@@ -979,35 +1587,268 @@ class AStra(object):
 		self.genomeRD = genomeRD
 		self.readDepthMedian = np.median(genomeRD)
 
-		# Anueploidy Spectrum 
-		ploidyModels = ['model1', 'model2', 'model3', 'model4', 'model5','model6', 'model7', 'model8', 'model9', 'model10']
+
+		############################# Coarse scanning ############################
+		ploidyModels = ['model1', 'model2', 'model3', 'model4', 'model5','model6']
 		ploidySegments = dict()
 		copyNumberReference = []
 		ploidyModelsError   = []
-		for ploidy in ploidyModels:
-			print(ploidy)
-			# copy-number estimation
-			estimatedCNReference = self.estimateCopyNumberReference(genomeRD, ploidy)	
-			copyNumberReference.append(estimatedCNReference)
-			# segments merging based on the estimated copy-number reference
-			ploidySegments[ploidy] = self.segmentsMerging(estimatedCNReference)
-			# centralization-error
-			centralizationError  = self.computeCentralizationError(estimatedCNReference, ploidySegments[ploidy])
-			ploidyModelsError.append(centralizationError)
 		#
-		ploidyIndex = ploidyModelsError.index(min(ploidyModelsError))
-		self.copyNumberReference = copyNumberReference[ploidyIndex]
-		self.ploidyModel  = ploidyModels[ploidyIndex]
-		self.ploidySegments = ploidySegments[self.ploidyModel]
-		self.centralizationErrors = ploidyModelsError
+		for ploidy in ploidyModels:
 
-		# Ploidy level
+			print('Model = ' + ploidy)
+
+			##################### Level#1: Coarse CN reference ###################
+			coarseCNReference = self.estimateCopyNumberReference(genomeRD, ploidy)
+			print('Coarse CN reference = ' + str(coarseCNReference))		
+
+			##################### Level#2: Fine CN reference ##################### 
+			candidatesCNReference = np.linspace(1.9,2.1,100)*coarseCNReference/2
+			#
+			fineCopyNumberReference = []
+			candidateCNRefError = []
+			#
+			for estimatedCNReference in candidatesCNReference:
+				# copy-number estimation
+				fineCopyNumberReference.append(estimatedCNReference)
+				finePloidySegments = self.segmentsMerging(estimatedCNReference)
+
+				# centralization-error
+				centralizationError  = self.computeCentralizationError(estimatedCNReference, finePloidySegments)					
+				candidateCNRefError.append(centralizationError)
+			#
+			CNRefIndex  = candidateCNRefError.index(min(candidateCNRefError))
+			CNRefError  = candidateCNRefError[CNRefIndex]
+			CNReference = fineCopyNumberReference[CNRefIndex]
+			#
+			ploidySegments[ploidy] = self.segmentsMerging(CNReference)
+			copyNumberReference.append(CNReference)
+			ploidyModelsError.append(CNRefError)
+			#
+			print(ploidy + ' CN reference = ' + str(CNReference))		
+			print(ploidy + ' CE = ' + str(CNRefError))		
+
+		# Final CN reference
+		ploidyIndex = ploidyModelsError.index(min(ploidyModelsError))
+		finalCE              = ploidyModelsError[ploidyIndex]
+		finalCNReference     = copyNumberReference[ploidyIndex]
+		finalPloidyModel     = ploidyModels[ploidyIndex]
+		finalPloidySegments  = ploidySegments[finalPloidyModel]
+		#
+		print('\n')
+		print('Final CN reference = ' + str(finalCNReference))
+		print('Final CE           = ' + str(finalCE))			
+		
+		######################### Aneuploidy Spectrum ##########################
+		self.copyNumberReference  = finalCNReference
+		self.ploidySegments       = finalPloidySegments
+		self.minimumCE            = finalCE
+		self.ploidyModel          = finalPloidyModel
+		self.centralizationErrors = ploidyModelsError
+		#
+		# Ploidy
 		self.ploidyLevel    = self.findNearestPloidy()
-		print(self.ploidyLevel)
-		print(self.ploidyModel)
-		# Output
+		self.ploidyNumber   = self.findPloidyNumber()
+		self.CS             = self.computeCS()
+		print('\n')
+		print('Ploidy number is ' + str(self.ploidyNumber))
+		print('Centralization score is ' + str(self.CS) + ' %')
+		print('Ploidy state is ' + self.ploidyLevel)
+		############################ Output Files #############################
 		self.writeAneuploidyResults()
 		self.writeAneuploidySpectrum(ploidyModelsError)
+
+
+
+
+
+
+	###################################################################################################################################	
+	###################################################################################################################################
+	###################################################################################################################################
+	def runAStraLite1(self):
+		"""
+		the pipeline for estimating the aneuploidy spectrum of the WGS data 
+		and generating the output files using only one distribution.	
+		"""
+
+		############################## RD-calculation ############################
+		self.readsCounting()
+		# Filtering & Segmentation
+		genomeRD  = np.array([]) 
+		for chrom in self.readCounts.keys():
+			chrFRDsignal = self.RDfiltering(chrom)
+			segmentsData = self.RDsegmentation(chrom) 
+			self.chrSegments[chrom] = segmentsData
+			genomeRD = np.append(genomeRD, chrFRDsignal)
+		#
+		self.genomeRD = genomeRD
+		self.readDepthMedian = np.median(genomeRD)
+
+
+		############################# Coarse scanning ############################
+		ploidyModels = ['model7']
+		ploidySegments = dict()
+		copyNumberReference = []
+		ploidyModelsError   = []
+		#
+		for ploidy in ploidyModels:
+
+			print('Model = ' + ploidy)
+
+			##################### Level#1: Coarse CN reference ######################
+			coarseCNReference = self.estimateCopyNumberReference(genomeRD, ploidy)
+			print('Coarse CN reference = ' + str(coarseCNReference))		
+
+			##################### Level#2: Fine CN reference ##################### 
+			fineCopyNumberReference = []
+			candidateCNRefError = []
+			#
+			estimatedCNReference = coarseCNReference
+			# copy-number estimation
+			fineCopyNumberReference.append(estimatedCNReference)
+			finePloidySegments = self.segmentsMerging(estimatedCNReference)
+			# centralization-error
+			centralizationError  = self.computeCentralizationError(estimatedCNReference, finePloidySegments)					
+			candidateCNRefError.append(centralizationError)
+
+			#
+			CNRefIndex  = candidateCNRefError.index(min(candidateCNRefError))
+			CNRefError  = candidateCNRefError[CNRefIndex]
+			CNReference = fineCopyNumberReference[CNRefIndex]
+			#
+			ploidySegments[ploidy] = self.segmentsMerging(CNReference)
+			copyNumberReference.append(CNReference)
+			ploidyModelsError.append(CNRefError)
+			#
+			print(ploidy + ' CN reference = ' + str(CNReference))		
+			print(ploidy + ' CE = ' + str(CNRefError))		
+
+		# Final CN reference
+		ploidyIndex = ploidyModelsError.index(min(ploidyModelsError))
+		finalCE              = ploidyModelsError[ploidyIndex]
+		finalCNReference     = copyNumberReference[ploidyIndex]
+		finalPloidyModel     = ploidyModels[ploidyIndex]
+		finalPloidySegments  = ploidySegments[finalPloidyModel]
+		#
+		print('\n')
+		print('Final CN reference = ' + str(finalCNReference))
+		print('Final CE           = ' + str(finalCE))			
+		
+		######################### Aneuploidy Spectrum ##########################
+		self.copyNumberReference  = finalCNReference
+		self.ploidySegments       = finalPloidySegments
+		self.minimumCE            = finalCE
+		self.ploidyModel          = finalPloidyModel
+		self.centralizationErrors = ploidyModelsError
+		#
+		# Ploidy
+		self.ploidyLevel    = self.findNearestPloidy()
+		self.ploidyNumber   = self.findPloidyNumber()
+		self.CS             = self.computeCS()
+		print('\n')
+		print('Ploidy number is ' + str(self.ploidyNumber))
+		print('Centralization score is ' + str(self.CS) + ' %')
+		print('Ploidy state is ' + self.ploidyLevel)
+		
+		############################ Output Files #############################
+		self.writeAneuploidyResults()
+		self.writeAneuploidySpectrum(ploidyModelsError)
+
+
+
+
+
+	###################################################################################################################################	
+	###################################################################################################################################
+	###################################################################################################################################
+	def runAStraLite2(self):
+		"""
+		the pipeline for estimating the aneuploidy spectrum of the WGS data 
+		and generating the output files.	
+		"""
+
+		############################## RD-calculation ############################
+		self.readsCounting()
+		# Filtering & Segmentation
+		genomeRD  = np.array([]) 
+		for chrom in self.readCounts.keys():
+			chrFRDsignal = self.RDfiltering(chrom)
+			segmentsData = self.RDsegmentation(chrom) 
+			self.chrSegments[chrom] = segmentsData
+			genomeRD = np.append(genomeRD, chrFRDsignal)
+		#
+		self.genomeRD = genomeRD
+		self.readDepthMedian = np.median(genomeRD)
+
+
+		##################### Level#1: Coarse CN reference #################
+		coarseCNReference = self.readDepthMedian
+		print('Coarse CN reference = ' + str(coarseCNReference))		
+
+
+		##################### Level#2: Fine CN reference ################### 
+		candidatesCNReference = np.linspace(0.25,4,400)*coarseCNReference
+		#
+		fineCopyNumberReference = []
+		candidateCNRefError = []
+		#
+		for estimatedCNReference in candidatesCNReference:
+			# copy-number estimation
+			fineCopyNumberReference.append(estimatedCNReference)
+			finePloidySegments = self.segmentsMerging(estimatedCNReference)
+			# centralization-error
+			centralizationError  = self.computeCentralizationError(estimatedCNReference, finePloidySegments)					
+			candidateCNRefError.append(centralizationError)
+		#
+		CNRefIndex       = candidateCNRefError.index(min(candidateCNRefError))
+		finalCE          = candidateCNRefError[CNRefIndex]
+		finalCNReference = fineCopyNumberReference[CNRefIndex]
+		#
+		finalPloidySegments   = self.segmentsMerging(finalCNReference)
+		finalPloidyModel = 'model7'
+
+		# Final CN reference
+		print('\n')
+		print('Final CN reference = ' + str(finalCNReference))
+		print('Final CE           = ' + str(finalCE))			
 		
 
+		######################### Aneuploidy Spectrum ##########################
+		self.copyNumberReference  = finalCNReference
+		self.ploidySegments       = finalPloidySegments
+		self.minimumCE            = finalCE
+		self.ploidyModel          = finalPloidyModel
+		self.centralizationErrors = [finalCE]
+		#
+		# Ploidy
+		self.ploidyLevel    = self.findNearestPloidy()
+		self.ploidyNumber   = self.findPloidyNumber()
+		self.CS             = self.computeCS()
+		print('\n')
+		print('Ploidy number is ' + str(self.ploidyNumber))
+		print('Centralization score is ' + str(self.CS) + ' %')
+		print('Ploidy state is ' + self.ploidyLevel)
+		
 
+		############################ Output Files #############################
+		ploidyModelsError = finalPloidyModel
+		self.writeAneuploidyResults()
+		self.writeAneuploidySpectrum(ploidyModelsError)
+		#
+		out = dict()
+		out['CNR'] = fineCopyNumberReference
+		out['CE']  = candidateCNRefError
+		#
+		inputFileName      = os.path.basename(self.inputFile)
+		inputFileNameNoExt = os.path.splitext(inputFileName)[0]
+		outputFilePath     = self.outputFolder + '/' + inputFileNameNoExt +  '_CNRef_CE_Values.xlsx' 
+		#
+		workbook = xlsxwriter.Workbook(outputFilePath) 
+		worksheet = workbook.add_worksheet() 
+		worksheet.write_column('A1',fineCopyNumberReference)
+		worksheet.write_column('B1',candidateCNRefError)
+		workbook.close()
+
+		##########
+		return out
