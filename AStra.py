@@ -742,7 +742,12 @@ class AStra(object):
 		spectrum.append(self.CS)
 		spectrum.append(self.readDepthMedian)
 		spectrum.append(self.readDepthMedian/self.copyNumberReference)
-		
+		#
+		genomeRD = []
+		for chrom in self.readCounts.keys():
+			chrRD = self.readCounts[chrom]
+			genomeRD = np.append(genomeRD, chrRD)
+		spectrum.append(np.sum(genomeRD))
 		############################# Aneuploidy spectrum ################################
 		if(self.aneuploidySpectrumMethod == 1):
 			# Segment-wise

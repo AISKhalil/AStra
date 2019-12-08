@@ -36,10 +36,11 @@ worksheet = workbook.add_worksheet()
 #4 CS 
 #5 RD-median
 #6 RD-median/CN ref
-#7-17 aneuploidy spectrum
-#18 ploidy state
-#19 ploidy model
-#20-25: CE for m1-m6
+#7 Total counts of NGS reads
+#8-18 aneuploidy spectrum
+#19 ploidy state
+#20 AStra model (m1-m6)
+#21-26: CE for m1-m6
 
 # Parameters of AStra's plots
 CNmax = 8 
