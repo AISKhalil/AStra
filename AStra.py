@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
-#Aneuploidy Spectrum Analysis as a Primer for Copy Number Studies of Cancer Cells
-__Name__		= "AStra"
+#Aneuploidy Spectrum Analysis (Digital Karyotyping) for Rapid Authentication of Cell Lines.
+__Name__	= "AStra"
 __Author__      = "Ahmed Khalil"
 __Email__       = "ahmed.khalil.bioinformatics@gmail.com"
-__URL__			= "https://github.com/AISKhalil/AStra"
+__URL__		= "https://github.com/AISKhalil/AStra"
 __Software__    = "Python 3"
 
 """
 AStra (Aneuploid Spectrum (detection) through read depth analysis) is 
-a Python-based software for capturing the aneuploidy spectrum of cancer genomes 
+a Python-based software for capturing the aneuploidy profile spectrum of cancer genomes 
 without explicit assumption of the ploidy level of the input sequencing data.
 
 Input data: BAM/SAM formatted-file.
