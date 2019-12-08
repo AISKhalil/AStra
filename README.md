@@ -109,20 +109,21 @@ You can modify this script to add the path of many BAM files. Besides to the def
 **AStra** generates many output files providing the detailed characterization of the aneuploidy profile 
 of the input cell line. Results of the analyzed cell lines were uploaded in `AStraResults/` folder.
 
->    **a. Aneuploidy characterization:** a text file containing the important features of aneuploidy profile of the input BAM
->    such as nearest ploidy, copy number reference, CE for each model, anueploidy spectrum, homogeneity score, CN State 0 percentage, Median 
->    error, and Median correction factor.
+>    **a. Aneuploidy characterization:** a text file containing the important features of aneuploidy profile of the input
+>    BAM such as whole-genome ploidy number, copy number reference (CNR), centralization error (CE), centralization score, 
+>    read depth(RD)-median, RD-median/CNR, total counts of NGS reads, and anueploidy spectrum (percentages of genome->
+>    segments per CN-state).
    
->    **b. Aneuploidy profile:** a narrowPeak BED format file of the approximated segmental anueploidy of the complete genome
->    for UCSC Genome Browser.
+>    **b. Chromosomal aneuploidy:** a narrowPeak BED format file of the approximated segmental anueploidy of the 
+>    complete genome for UCSC Genome Browser.
 
->    **c. Coverage plot of the genome:** a figure of the RD signal of the genome after setting the CN reference. 
+>    **c. Aneuploidy profile:** a figure of the RD signal of the genome after setting the CN reference. 
 >    For example, coverage plot of VCaP cell line is:
 ![VCaP coverage plot](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_GenomeRD.png)
  
 >    **d. Anueploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
->    the black line denotes the ploidy CN state (major peak) where the red line denotes the global median. The dotted black lines 
->    denote the other CN states. For example, anueploidy spectrum of VCaP cell line is:
+>    The red line denotes the global median whereas the dotted black lines denote the other CN states. 
+>    For example, anueploidy spectrum of VCaP cell line is:
 ![VCap anueploidy spectrum](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_200bin_GenomeHistogram.png)
  
  
