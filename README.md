@@ -4,7 +4,7 @@
 
 **AStra** is a Python-based framework for aneuploidy profiling of cancer NGS (next-generation sequencing) data and assessing their suitability for copy number analysis without any prior knowledge of the input cell line. **AStra** estimates the best-fit aneuploidy profile as the spectrum with most genomic segments around integral copy number (CN) states. After defining the best-fit spectrum, **AStra** compute the centralization score (CS) that measures the localization degree of genomic regions around CN states.
 
-**For a full description of the method and applications, please visit [AStra Manuscript](https://www.biorxiv.org/content/10.1101/674929v1).**
+**For a full description of the method and applications, please visit the old version of our manuscript [AStra Manuscript](https://www.biorxiv.org/content/10.1101/674929v1).**
 
 ## Contents
 - [Requirements](#requirement)
