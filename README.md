@@ -43,6 +43,7 @@ pip3 install --upgrade pip
 
 ```bash
 cd AStra
+sudo apt-get install python3-venv
 python3 -m venv AStraPythonEnv
 source AStraPythonEnv/bin/activate
 ```
@@ -51,7 +52,7 @@ source AStraPythonEnv/bin/activate
 
 ```bash
 sudo apt install python3-tk
-sudo apt install zlib1g zlib1g-dev zlib1g-dbg
+sudo apt install zlib1g zlib1g-dev zlib1g-dbg liblzma-dev libbz2-dev
 pip3 install wheel
 pip3 install numpy
 pip3 install scipy
