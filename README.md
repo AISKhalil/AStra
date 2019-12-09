@@ -120,12 +120,12 @@ of the input cell line. Results of the analyzed cell lines were uploaded in `ASt
 >    complete genome for UCSC Genome Browser.
 
 >    **c. Aneuploidy profile:** a figure of the RD signal of the genome after setting the CN reference. 
->    For example, aneuploidy profile of VCaP cell line is:
-![VCaP coverage plot](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_GenomeAneuploidyWithChrsMarkers.png)
+>    For example, aneuploidy profile of A427 cell line is:
+![VCaP coverage plot](/AStraResults/A427_GenomeAneuploidyWithChrsMarkers.png)
  
 >    **d. Anueploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
 >    The red line denotes the RD median whereas the dotted black lines denote the CN states. 
->    For example, anueploidy spectrum of VCaP cell line is:
-![VCap anueploidy spectrum](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_200bin_GenomeHistogram.png)
+>    For example, anueploidy spectrum of A427 cell line is:
+![VCap anueploidy spectrum](/AStraResults/A427_200bin_GenomeHistogram.png)
  
  
