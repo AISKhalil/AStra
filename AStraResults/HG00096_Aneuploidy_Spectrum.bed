@@ -1,0 +1,31 @@
+Ploidy number is 1.9437596302003082
+
+Copy number reference = 23562.1087125
+Centralization error = 705.5811040574536
+Centralization score = 96.97867298578198 %
+
+RD signal median = 23411.0
+Median/CN reference = 0.9935867916431506
+CN = 0 : 6.016324381253291 %
+CN = 1 : 5.285676671932596 %
+CN = 2 : 88.69799894681411 %
+CN = 3 : 0.0 %
+CN = 4 : 0.0 %
+CN = 5 : 0.0 %
+CN = 6 : 0.0 %
+CN = 7 : 0.0 %
+CN = 8 : 0.0 %
+CN = 9 : 0.0 %
+CN >= 10 : 0.0 %
+
+Ploidy state is diploid
+Ploidy model is model1
+CE (model1)    = 705.5811040574536
+CE (model2)    = 1394.9534204788088
+CE (model3)    = 1438.2137644632323
+CE (model4)    = 705.5811040574536
+CE (model5)    = 1394.9534204788088
+CE (model6)    = 705.5811040574536
+
+
+
