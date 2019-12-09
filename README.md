@@ -1,10 +1,11 @@
 # AStra: Aneuploidy Spectrum (Digital Karyotyping) for Rapid Authentication of Cell Lines
 
-**Motivation:** Hyperploidy and segmental aneuploidy are hallmarks of cancer cells due to chromosome segregation errors and genomic instability. In such a situation, accurate aneuploidy profiling of cancer data is critical for calibration of copy-number detection tools. Additionally, cancer data may represent cell population which suffers from different levels of clonal heterogeneity. The degree of heterogeneity adversely affects the segregation of the genome into integral copy number states. This, in turn, strongly influences the reliability of this data for aneuploidy profiling and copy number analysis.
+**Motivation:** The widespread concern about genetic drift and cross-contamination of cell lines calls for a pressing need for their authentication as a basic quality control for scientific data. The current genetic techniques for authentication are time-consuming and require specific documentary standard and laboratory protocols. Given the fact that whole-genome sequencing (WGS) data are readily available, read depth (RD)-based computational analyses has allowed the estimation of genetic profiles of cell lines.
 
-**AStra** is a Python-based framework for aneuploidy profiling of cancer NGS (next-generation sequencing) data and assessing their suitability for copy number analysis without any prior knowledge of the input cell line. **AStra** estimates the best-fit aneuploidy profile as the spectrum with most genomic segments around integral copy number (CN) states. After defining the best-fit spectrum, **AStra** compute the centralization score (CS) that measures the localization degree of genomic regions around CN states.
-
-**For a full description of the method and applications, please visit the old version of our manuscript [AStra Manuscript](https://www.biorxiv.org/content/10.1101/674929v1).**
+**AStra** is a Python-based software AStra for de novo estimation of the genome-wide aneuploidy profile from raw WGS reads. 
+It is a simple, user-friendly, and free tool that provides the elementary information about the chromosomal aneuploidy for 
+cell line authentication. **AStra** provides an analytical and visualization platform for rapid and easy comparison between different 
+cell lines/strains.  We recommend **AStra** for rapid first-pass quality assessment of scientific data that employ cancer cell lines.
 
 ## Contents
 - [Requirements](#requirement)
