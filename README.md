@@ -121,7 +121,7 @@ of the input cell line. Results of the analyzed cell lines were uploaded in `ASt
 
 >    **c. Aneuploidy profile:** a figure of the RD signal of the genome after setting the CN reference. 
 >    For example, coverage plot of VCaP cell line is:
-![VCaP coverage plot](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_GenomeRD.png)
+![VCaP coverage plot](/AStraResults/VCap_ENCFF273KUS_ENCFF466WDC_merged_Input_hg19_CK_bowtie2_default_rmdup.removed.blackList.Region.bedtools_GenomeAneuploidyWithChrsMarkers.png)
  
 >    **d. Anueploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
 >    The red line denotes the global median whereas the dotted black lines denote the other CN states. 
