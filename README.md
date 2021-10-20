@@ -125,7 +125,7 @@ of the input cell line. Results of the analyzed cell lines were uploaded in `ASt
 >    For example, aneuploidy profile of A427 cell line is:
 ![VCaP coverage plot](/AStraResults/A427_GenomeAneuploidyWithChrsMarkers.png)
  
->    **d. Anueploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
+>    **d. Aneuploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
 >    The red line denotes the RD median whereas the dotted black lines denote the CN states. 
 >    For example, anueploidy spectrum of A427 cell line is:
 ![VCap anueploidy spectrum](/AStraResults/A427_200bin_GenomeHistogram.png)
