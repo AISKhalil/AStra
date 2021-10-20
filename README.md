@@ -1,11 +1,7 @@
-# AStra: an analytical and visualization platform for rapid and easy comparison between different strains or between cell lines based on their aneuploidy spectra
+# AStra: An analytical and visualization platform for rapid and easy comparison between different strains or between cell lines
 
-**Motivation:** The widespread concern about genetic drift and cross-contamination of cell lines calls for a pressing need for their authentication as a basic quality control for scientific data. The current genetic techniques for authentication are time-consuming and require specific documentary standard and laboratory protocols. Given the fact that whole-genome sequencing (WGS) data are readily available, read depth (RD)-based computational analyses has allowed the estimation of genetic profiles of cell lines.
+**AStra** is a Python-based software for for de novo estimation of the genome-wide segmental aneuploidy to measure and visually interpret strain-level similarities or differences of cancer cell lines from whole-genome sequencing (WGS). **AStra** provides an analytical and visualization platform for rapid and easy comparison between different strains or between cell lines based on their aneuploidy spectra solely using the raw BAM files representing mapped reads. We recommend **AStra** for rapid first-pass quality assessment of cancer cell lines before integrating scientific datasets that employ deep sequencing.
 
-**AStra** is a Python-based software for de novo estimation of the genome-wide aneuploidy profile from raw WGS reads. 
-It is a simple, user-friendly, and free tool that provides the elementary information about the chromosomal aneuploidy for 
-cell line authentication. **AStra** provides an analytical and visualization platform for rapid and easy comparison between different 
-cell lines/strains.  We recommend **AStra** for rapid first-pass quality assessment of scientific data that employ cancer cell lines.
 
 ## Contents
 - [Requirements](#requirement)
