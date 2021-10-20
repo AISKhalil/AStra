@@ -105,7 +105,7 @@ arguments:
 python ./AStraMultipleInputs.py
 ```
 
-You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: whole-genome ploidy number, 2: copy number reference (CNR), 3: centralization error (CE), 4: centralization score, 5: read depeth(RD)-median, 6: RD-median/CNR, 7: total counts of NGS reads, 8-18: anueploidy spectrum (percentages of genome-segments per CN-state), 19: whole-genome ploidy state, 20: AStra model, and 21-26: CEs for all models (m1-m6). This eases the analysis of large number of BAM files.
+You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: whole-genome ploidy number, 2: copy number reference (CNR), 3: centralization error (CE), 4: centralization score, 5: read depeth(RD)-median, 6: RD-median/CNR, 7: total counts of NGS reads, 8-18: aneuploidy spectrum (percentages of genome-segments per CN-state), 19: whole-genome ploidy state, 20: AStra model, and 21-26: CEs for all models (m1-m6). This eases the analysis of large number of BAM files.
 
 
 ### <a name="output"></a>Output
@@ -118,7 +118,7 @@ of the input cell line. Results of the analyzed cell lines were uploaded in `ASt
 >    read depth(RD)-median, RD-median/CNR, total counts of NGS reads, and anueploidy spectrum (percentages of genome->
 >    segments per CN-state).
    
->    **b. Chromosomal aneuploidy:** a narrowPeak BED format file of the approximated segmental anueploidy of the 
+>    **b. Chromosomal aneuploidy:** a narrowPeak BED format file of the approximated segmental aneuploidy of the 
 >    complete genome for UCSC Genome Browser.
 
 >    **c. Aneuploidy profile:** a figure of the RD signal of the genome after setting the CN reference. 
@@ -127,7 +127,6 @@ of the input cell line. Results of the analyzed cell lines were uploaded in `ASt
  
 >    **d. Aneuploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
 >    The red line denotes the RD median whereas the dotted black lines denote the CN states. 
->    For example, anueploidy spectrum of A427 cell line is:
+>    For example, aneuploidy spectrum of A427 cell line is:
 ![VCap anueploidy spectrum](/AStraResults/A427_200bin_GenomeHistogram.png)
- 
  
