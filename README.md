@@ -115,7 +115,7 @@ of the input cell line. Results of the analyzed cell lines were uploaded in `ASt
 
 >    **a. Aneuploidy characterization:** a text file containing the important features of aneuploidy profile of the input
 >    BAM such as whole-genome ploidy number, copy number reference (CNR), centralization error (CE), centralization score, 
->    read depth(RD)-median, RD-median/CNR, total counts of NGS reads, and anueploidy spectrum (percentages of genome->
+>    read depth(RD)-median, RD-median/CNR, total counts of NGS reads, and aneuploidy spectrum (percentages of genome->
 >    segments per CN-state).
    
 >    **b. Chromosomal aneuploidy:** a narrowPeak BED format file of the approximated segmental aneuploidy of the 
