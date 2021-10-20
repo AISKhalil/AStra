@@ -2,6 +2,11 @@
 
 **AStra** is a Python-based software for for de novo estimation of the genome-wide segmental aneuploidy to measure and visually interpret strain-level similarities or differences of cancer cell lines from whole-genome sequencing (WGS). **AStra** provides an analytical and visualization platform for rapid and easy comparison between different strains or between cell lines based on their aneuploidy spectra solely using the raw BAM files representing mapped reads. We recommend **AStra** for rapid first-pass quality assessment of cancer cell lines before integrating scientific datasets that employ deep sequencing.
 
+**To cite AStra software, please reference:**
+Khalil AIS, Chattopadhyay A, Sanyal A. Analysis of Aneuploidy Spectrum From Whole-Genome Sequencing Provides Rapid Assessment of Clonal Variation Within Established Cancer Cell Lines. Cancer Inform. 2021;20:11769351211049236. Published 2021 Oct 16. doi:10.1177/11769351211049236. PMCID: PMC8521761. 
+
+**For a full description of the method and applications, please visit [AStra Manuscript](https://journals.sagepub.com/doi/pdf/10.1177/11769351211049236).**
+
 
 ## Contents
 - [Requirements](#requirement)
