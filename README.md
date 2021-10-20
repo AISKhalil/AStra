@@ -1,4 +1,4 @@
-# AStra: Aneuploidy Spectrum (Digital Karyotyping) for Rapid Authentication of Cell Lines
+# AStra: an analytical and visualization platform for rapid and easy comparison between different strains or between cell lines based on their aneuploidy spectra
 
 **Motivation:** The widespread concern about genetic drift and cross-contamination of cell lines calls for a pressing need for their authentication as a basic quality control for scientific data. The current genetic techniques for authentication are time-consuming and require specific documentary standard and laboratory protocols. Given the fact that whole-genome sequencing (WGS) data are readily available, read depth (RD)-based computational analyses has allowed the estimation of genetic profiles of cell lines.
 
