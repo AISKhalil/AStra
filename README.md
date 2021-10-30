@@ -1,10 +1,10 @@
 # AStra: An analytical and visualization platform for rapid and easy comparison between different strains or between cell lines
 
-**AStra** is a Python-based software for for de novo estimation of the genome-wide segmental aneuploidy to measure and visually interpret strain-level similarities or differences of cancer cell lines from whole-genome sequencing (WGS). **AStra** provides an analytical and visualization platform for rapid and easy comparison between different strains or between cell lines based on their aneuploidy spectra solely using the raw BAM files representing mapped reads. We recommend **AStra** for rapid first-pass quality assessment of cancer cell lines before integrating scientific datasets that employ deep sequencing.
+**AStra** is a Python-based software for de novo estimation of the genome-wide segmental aneuploidy to measure and visually interpret strain-level similarities or differences of cancer cell lines from whole-genome sequencing (WGS). **AStra** provides an analytical and visualization platform for rapid and easy comparison between different strains or between cell lines based on their aneuploidy spectra solely using the raw BAM files representing mapped reads. We recommend **AStra** for rapid first-pass quality assessment of cancer cell lines before integrating scientific datasets that employ deep sequencing.
 
 **To cite AStra software, please reference:**
 
-Khalil AIS, Chattopadhyay A, Sanyal A. Analysis of Aneuploidy Spectrum From Whole-Genome Sequencing Provides Rapid Assessment of Clonal Variation Within Established Cancer Cell Lines. Cancer Inform. 2021;20:11769351211049236. Published 2021 Oct 16. doi:10.1177/11769351211049236. PMCID: PMC8521761. 
+Khalil AIS, Chattopadhyay A, Sanyal A. Analysis of Aneuploidy Spectrum From Whole-Genome Sequencing Provides Rapid Assessment of Clonal Variation Within Established Cancer Cell Lines. Cancer Inform. 2021;20:11769351211049236. Published 2021 Oct 16. doi:10.1177/11769351211049236. PMID: 34671179. 
 
 **For a full description of the method and applications, please visit [AStra Manuscript](https://journals.sagepub.com/doi/pdf/10.1177/11769351211049236).**
 
@@ -50,7 +50,7 @@ python3 -m venv AStraPythonEnv
 source AStraPythonEnv/bin/activate
 ```
 
-- Install dependencies: please make sure you have install all the libraries/headers. In Ubuntu 18.04 LTS you can do:
+- Install dependencies: please make sure you have installed all the libraries/headers. In Ubuntu 18.04 LTS you can do:
 
 ```bash
 sudo apt install python3-tk
@@ -74,7 +74,7 @@ pip3 install xlsxwriter
 
 ### <a name="usage"></a>Usage
 
-`AStra` is developed as a Python-class. Therefore, we added two scripts as simpler interfaces for AStra: **AStraSingleInput** and **AStraMultipleInputs**. In order to use `AStra`, you need first to activate the python virtual environment that you created before:
+`AStra` is developed as a Python-class. Therefore, we added two scripts as simpler interfaces for AStra: **AStraSingleInput** and **AStraMultipleInputs**. In order to use `AStra`, you need to first activate the python virtual environment that you created before:
 
 ```bash
 cd AStra
@@ -105,7 +105,7 @@ arguments:
 python ./AStraMultipleInputs.py
 ```
 
-You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: whole-genome ploidy number, 2: copy number reference (CNR), 3: centralization error (CE), 4: centralization score, 5: read depeth(RD)-median, 6: RD-median/CNR, 7: total counts of NGS reads, 8-18: aneuploidy spectrum (percentages of genome-segments per CN-state), 19: whole-genome ploidy state, 20: AStra model, and 21-26: CEs for all models (m1-m6). This eases the analysis of large number of BAM files.
+You can modify this script to add the path of many BAM files. Besides to the default output files, this script outputs an excel file contains the complete profile of all BAM files (profile of each BAM file in a row). Each row contains fields of 1: cellular ploidy, 2: copy number reference (CNR), 3: centralization error (CE), 4: centralization score, 5: read depeth (RD)-median, 6: RD-median/CNR, 7: total counts of NGS reads, 8-18: aneuploidy spectrum (percentages of genomic segments per CN-state), 19: whole-genome ploidy level, 20: AStra model, and 21-26: CEs for all models (m1-m6). This eases the analysis of large number of BAM files.
 
 
 ### <a name="output"></a>Output
@@ -114,19 +114,18 @@ You can modify this script to add the path of many BAM files. Besides to the def
 of the input cell line. Results of the analyzed cell lines were uploaded in `AStraResults/` folder.
 
 >    **a. Aneuploidy characterization:** a text file containing the important features of aneuploidy profile of the input
->    BAM such as whole-genome ploidy number, copy number reference (CNR), centralization error (CE), centralization score, 
->    read depth(RD)-median, RD-median/CNR, total counts of NGS reads, and aneuploidy spectrum (percentages of genome->
->    segments per CN-state).
+>    BAM such as cellular ploidy, whole-genome ploidy level, copy number reference (CNR), centralization error (CE), centralization score, 
+>    read depth (RD)-median, RD-median/CNR, total counts of NGS reads, and aneuploidy spectrum (percentages of genomeic segments per CN-state).
    
 >    **b. Chromosomal aneuploidy:** a narrowPeak BED format file of the approximated segmental aneuploidy of the 
->    complete genome for UCSC Genome Browser.
+>    complete genome for visualization in UCSC Genome Browser.
 
->    **c. Aneuploidy profile:** a figure of the RD signal of the genome after setting the CN reference. 
+>    **c. Aneuploidy profile:** a figure of the CN states of the genomic segments after setting the CN reference. 
 >    For example, aneuploidy profile of A427 cell line is:
 ![VCaP coverage plot](/AStraResults/A427_GenomeAneuploidyWithChrsMarkers.png)
  
 >    **d. Aneuploidy spectrum:** a figure of the frequency distribution of the input sequencing data. In the frequency distribution,
->    The red line denotes the RD median whereas the dotted black lines denote the CN states. 
+>    the red line denotes the RD median whereas the dotted black lines denote the CN states. 
 >    For example, aneuploidy spectrum of A427 cell line is:
 ![VCap anueploidy spectrum](/AStraResults/A427_200bin_GenomeHistogram.png)
  
