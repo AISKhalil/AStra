@@ -852,10 +852,7 @@ class AStra(object):
 		
 		###########################
 		noChrs = len(self.chrNames)
-		chrNames = []
-		for i in range(1,noChrs):
-			chrNames = chrNames + ['chr'+str(i)]
-		chrNames = chrNames + ['chrX']
+		chrNames = self.chrNames
 
 		chrIndex = 1
 		for chrName in chrNames:	
@@ -1520,7 +1517,7 @@ class AStra(object):
 		plt.xlabel('Reads/bin')
 		plt.ylabel('Frequency')
 		####
-		plt.plot([(self.readDepthMedian), (self.readDepthMedian)],[0,max(n[0])], 'r', lineWidth = 2)
+		plt.plot([(self.readDepthMedian), (self.readDepthMedian)],[0,max(n[0])], 'r', linewidth = 2)
 		####
 		plt.plot([self.copyNumberReference, self.copyNumberReference],[0,max(n[0])],'k--')
 		####
@@ -1549,7 +1546,7 @@ class AStra(object):
 		plt.xlabel('Reads/bin')
 		plt.ylabel('Frequency')
 		####
-		plt.plot([(self.readDepthMedian), (self.readDepthMedian)],[0,max(n[0])], 'r', lineWidth = 2)
+		plt.plot([(self.readDepthMedian), (self.readDepthMedian)],[0,max(n[0])], 'r', linewidth = 2)
 		####
 		plt.plot([self.copyNumberReference, self.copyNumberReference],[0,max(n[0])],'k--')
 		####
